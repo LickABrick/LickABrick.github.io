@@ -22,10 +22,6 @@ jobs:
       - uses: actions/setup-node@v3
       - name: create env file
         run: |
-          touch .env
-          echo NODE_ENV=${{ env.NODE_ENV }} >> .env
-      - name: Install dependencies & build
-        run: |
           npm install
           npm run build
       - uses: actions/upload-pages-artifact@v2
