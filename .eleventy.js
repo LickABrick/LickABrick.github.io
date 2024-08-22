@@ -4,7 +4,7 @@ require('dotenv').config();
 module.exports = function (eleventyConfig) {
     eleventyConfig.addGlobalData('env', process.env.NODE_ENV);
     
-    eleventyConfig.addPassthroughCopy("src/assets/css/style.css");
+    eleventyConfig.addPassthroughCopy("src/assets/css/tailwind.css");
     eleventyConfig.addPassthroughCopy("src/assets/css/prism-theme.css");
     eleventyConfig.addPassthroughCopy("src/assets/images");
     eleventyConfig.addPassthroughCopy("src/assets/favicon");
