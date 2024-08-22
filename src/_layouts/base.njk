@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ '/assets/favicon/apple-touch-icon.png' | url }}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/favicon/favicon-32x32.png' | url }}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ '/assets/favicon/favicon-16x16.png' | url }}">
+  <link rel="manifest" href="{{ '/assets/favicon/site.webmanifest' | url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/tailwind.css' | url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/prism-theme.css' | url }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap" rel="stylesheet">
+  {% if env == "production" %}
+  <script defer src="https://umami.cl01.krokbv.com/script.js" data-website-id="af370b04-0481-4ed8-9887-c55fc59bf051"></script>
+  {% endif %}
+  <title>{{title}}</title>
+</head>
+
+<body class="px-16 pt-8 lg:px-96 bg-shark-950">
+  {% include "partials/_header.njk" %}
+  <main class="min-h-screen py-12">
+    {{content | safe}}
+  </main>
+</body>
+
+</html>

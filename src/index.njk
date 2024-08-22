@@ -1,0 +1,18 @@
+---
+layout: base
+title: Home
+tags: page
+---
+
+<div class="flex flex-col gap-6">
+    {% for post in collections.post %}
+    <div class="flex flex-col gap-2">
+        <a class="text-2xl font-semibold text-theme-300" href="{{ post.url }}">{{ post.data.title }}</a>
+        <p class="text-neutral-50 pb-4">{{ post.data.description }}</p>
+        {% if post.data.publish_date %}
+        <span class="text-theme-800 self-end">{{ post.data.publish_date }}</span>
+        {% endif %}
+        <hr class="border-theme-300">
+    </div>
+    {% endfor %}
+</div>

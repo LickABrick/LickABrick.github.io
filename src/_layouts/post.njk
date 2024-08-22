@@ -1,0 +1,13 @@
+---
+layout: base
+---
+
+<div class="flex flex-col">
+    <a class="text-2xl font-semibold no-underline text-theme-300" href="{{ url }}">{{ title }}</a>
+    <p>{{description}}</p>
+    <hr>
+</div>
+
+<main class="min-h-screen py-6">
+    {{content | safe}}
+</main>

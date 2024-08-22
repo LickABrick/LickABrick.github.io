@@ -1,0 +1,72 @@
+/* src/assets/css/tailwind.css*/
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: "Fira Code", sans-serif;
+  line-height: 1.5;
+}
+
+main {
+  @apply text-neutral-50;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-semibold;
+}
+
+h2 {
+  @apply text-[1.4rem];
+  @apply mb-4;
+  @apply mt-6;
+}
+
+ul {
+  @apply list-disc;
+  @apply list-inside;
+  @apply marker:text-theme-300;
+}
+
+p {
+  @apply mb-5;
+}
+
+blockquote {
+  @apply p-4 my-4 border-s-8 border-theme-300 bg-shark-900 italic;
+}
+
+blockquote p {
+  @apply mb-0;
+}
+
+a {
+  @apply underline text-theme-200;
+}
+
+table {
+  @apply w-full text-left rtl:text-right;
+}
+
+thead {
+  @apply uppercase text-theme-300;
+}
+
+td,
+th {
+  @apply px-4 py-2;
+  @apply border border-dashed border-theme-300;
+}
+
+img {
+  @apply rounded-md;
+}
+
+hr {
+  @apply border-dashed border-theme-300;
+}
