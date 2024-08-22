@@ -10,7 +10,7 @@ description: Handy notes I refer to in my day-to-day life
         <a class="text-2xl font-semibold text-theme-300" href="{{ note.url }}">{{ note.data.title }}</a>
         <p class="pb-4 text-neutral-50">{{ note.data.description }}</p>
         {% if note.data.publish_date %}
-        <span class="self-end text-theme-800">{{ note.data.publish_date }}</span>
+        <span class="text-theme-500 self-end">{{ note.data.publish_date }}</span>
         {% endif %}
         <hr class="border-theme-300">
     </div>
