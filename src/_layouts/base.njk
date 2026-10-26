@@ -17,6 +17,7 @@
   {% if layout == 'post' %}
   <meta property="article:published_time" content="{{ page.date | publishedISO }}">
   {% if last_modified | isUpdated(page.date) %}<meta property="article:modified_time" content="{{ last_modified | publishedISO }}">{% endif %}
+  <script type="application/ld+json">{{ title | articleSchema(description, page.date, last_modified, page.url, site) | jsonSafe | safe }}</script>
   {% endif %}
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="{{ pageTitle }}">

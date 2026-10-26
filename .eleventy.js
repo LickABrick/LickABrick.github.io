@@ -28,11 +28,11 @@ module.exports = function (eleventyConfig) {
     }));
     eleventyConfig.addFilter("isUpdated", (modified, published) => Boolean(modified) && asDate(modified) > asDate(published));
     eleventyConfig.addFilter("jsonSafe", value => JSON.stringify(value).replace(/</g, "\\u003c"));
-    eleventyConfig.addFilter("articleSchema", (data, url, site) => ({
+    eleventyConfig.addFilter("articleSchema", (title, description, published, modified, url, site) => ({
         "@context": "https://schema.org", "@type": "TechArticle",
-        headline: data.title, description: data.description,
-        url: new URL(url, site.url).href, datePublished: asDate(data.page.date).toISOString(),
-        ...(data.last_modified ? { dateModified: asDate(data.last_modified).toISOString() } : {}),
+        headline: title, description,
+        url: new URL(url, site.url).href, datePublished: asDate(published).toISOString(),
+        ...(modified && asDate(modified) > asDate(published) ? { dateModified: asDate(modified).toISOString() } : {}),
     }));
     eleventyConfig.addFilter("rssDate", value => asDate(value).toUTCString());
     eleventyConfig.addFilter("newestFirst", items => [...items].sort((a, b) =>
