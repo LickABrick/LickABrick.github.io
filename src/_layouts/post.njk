@@ -1,13 +1,14 @@
 ---
 layout: base
 ---
-
-<div class="flex flex-col">
-    <a class="text-2xl font-semibold no-underline text-theme-300" href="{{ url }}">{{ title }}</a>
-    <p>{{description}}</p>
-    <hr>
-</div>
-
-<main class="min-h-screen py-6">
-    {{content | safe}}
-</main>
+<article>
+  <header>
+    {% if platform %}<p class="meta">{{ platform }}</p>{% endif %}
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
+    {% set published = page.date %}{% set modified = last_modified %}{% set verified = last_verified %}{% set compact = false %}
+    {% include "partials/dates.njk" %}
+    {% set tagLimit = 0 %}{% include "partials/tags.njk" %}
+  </header>
+  {{ content | safe }}
+</article>

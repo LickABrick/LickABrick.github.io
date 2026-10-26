@@ -1,0 +1,19 @@
+---
+layout: base
+title: Browse Tags
+description: Find topics across Posts and Snippets. Counts show published content items, not pageviews.
+permalink: /tags/
+---
+<header class="page-intro"><h1>Browse Tags</h1><p>{{ description }}</p></header>
+<div data-tag-directory>
+  <form class="search-controls tag-search" role="search" aria-label="Find a tag" hidden>
+    <div><label for="tag-query">Find a tag</label><input id="tag-query" type="search" aria-controls="tag-directory" autocomplete="off" placeholder="Search tag names..."></div>
+    <button type="reset">Reset</button>
+  </form>
+  <p class="meta" role="status" hidden></p>
+  <div id="tag-directory">
+    {% from "partials/tag-directory.njk" import render as tagLinks %}{{ tagLinks(collections.publicTags) }}
+    {% if not collections.publicTags.length %}<p>No tags published yet.</p>{% endif %}
+  </div>
+</div>
+<script defer src="/assets/js/tag-search.js"></script>

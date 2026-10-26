@@ -1,0 +1,8 @@
+{% macro render(id, items, placeholder) %}
+<form class="search-controls" hidden role="search" aria-label="Find {{ id }}">
+  <div><label for="{{ id }}-query">Search {{ id }}</label><input id="{{ id }}-query" aria-controls="{{ id }}-results" type="search" autocomplete="off" placeholder="{{ placeholder }}"></div>
+  <div><label for="{{ id }}-tag">Tag</label><select id="{{ id }}-tag" aria-controls="{{ id }}-results"><option value="">All tags</option>{% for tag in items | archiveTags %}<option value="{{ tag.slug }}">{{ tag.label }}</option>{% endfor %}</select></div>
+  <button type="reset">Reset</button>
+</form>
+<p class="meta" role="status" hidden></p>
+{% endmacro %}

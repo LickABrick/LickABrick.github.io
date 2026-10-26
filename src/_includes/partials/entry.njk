@@ -1,0 +1,16 @@
+{% macro render(entry, type="post", variant="full", heading=2) %}
+<section class="entry{% if variant == 'compact' %} entry-compact{% endif %}"{% if variant == 'full' %} data-content-url="{{ entry.url }}"{% endif %}>
+  {% if type == 'post' %}
+    {% set published = entry.date %}{% set modified = entry.data.last_modified %}{% set verified = false %}{% set compact = false %}
+    {% include "partials/dates.njk" %}
+  {% endif %}
+  {% if heading == 3 %}<h3><a href="{{ entry.url }}">{{ entry.data.title }}</a></h3>{% else %}<h2><a href="{{ entry.url }}">{{ entry.data.title }}</a></h2>{% endif %}
+  {% if variant == 'full' %}<p>{{ entry.data.description }}</p>{% endif %}
+  {% set tags = entry.data.tags %}{% set tagLimit = 0 %}{% if variant == 'compact' %}{% set tagLimit = 2 %}{% endif %}
+  {% include "partials/tags.njk" %}
+  {% if type == 'snippet' and variant == 'full' and (entry.data.last_modified or entry.data.last_verified) %}
+    {% set published = entry.date %}{% set modified = entry.data.last_modified %}{% set verified = entry.data.last_verified %}{% set compact = true %}
+    {% include "partials/dates.njk" %}
+  {% endif %}
+</section>
+{% endmacro %}

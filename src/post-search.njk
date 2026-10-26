@@ -1,0 +1,6 @@
+---
+permalink: /post-search.json
+layout: false
+eleventyExcludeFromCollections: true
+---
+{{ collections.post | searchIndex | jsonSafe | safe }}

@@ -1,18 +1,36 @@
 ---
 layout: base
-title: Home
+title: Infrastructure & Automation
+description: Things I build, document and want to remember.
 tags: page
 ---
-
-<div class="flex flex-col gap-6">
-    {% for post in collections.post %}
-    <div class="flex flex-col gap-2">
-        <a class="text-2xl font-semibold text-theme-300" href="{{ post.url }}">{{ post.data.title }}</a>
-        <p class="text-neutral-50 pb-4">{{ post.data.description }}</p>
-        {% if post.data.publish_date %}
-        <span class="text-theme-500 self-end">{{ post.data.publish_date }}</span>
-        {% endif %}
-        <hr class="border-theme-300">
-    </div>
-    {% endfor %}
-</div>
+{% from "partials/entry.njk" import render as renderEntry %}
+<header class="page-intro"><h1>Infrastructure &amp; Automation</h1><p>{{ description }}</p></header>
+{% set topics = collections.publicTags | frequentTags %}
+{% if topics.length %}
+<section class="topic-discovery" aria-labelledby="explore-tags">
+  <div class="section-heading"><h2 id="explore-tags">Explore Tags</h2><a href="/tags/">Browse all tags</a></div>
+  {% from "partials/tag-directory.njk" import render as tagLinks %}{{ tagLinks(topics) }}
+</section>
+{% endif %}
+{% set recentPosts = collections.post | newestFirst | head(5) %}
+{% set recentSnippets = collections.snippet | newestFirst | head(5) %}
+{% if recentPosts.length %}
+<section class="index-section" aria-labelledby="recent-posts">
+  <div class="section-heading"><h2 id="recent-posts">Recent Posts</h2><a href="/posts/">View all Posts</a></div>
+  <div class="entry-list">
+  {% set entryType = "post" %}{% set entryHeading = 3 %}{% set entryVariant = "full" %}
+  {% for entry in recentPosts %}{{ renderEntry(entry, entryType, entryVariant, entryHeading) }}{% endfor %}
+  </div>
+</section>
+{% endif %}
+{% if recentSnippets.length %}
+<section class="index-section" aria-labelledby="recent-snippets">
+  <div class="section-heading"><h2 id="recent-snippets">Recent Snippets</h2><a href="/snippets/">View all Snippets</a></div>
+  <div class="entry-list">
+  {% set entryType = "snippet" %}{% set entryHeading = 3 %}{% set entryVariant = "compact" %}
+  {% for entry in recentSnippets %}{{ renderEntry(entry, entryType, entryVariant, entryHeading) }}{% endfor %}
+  </div>
+</section>
+{% endif %}
+{% if not recentPosts.length and not recentSnippets.length %}<p>No entries published yet.</p>{% endif %}

@@ -2,8 +2,8 @@
 title: Using Power Automate to collect Powershell script results
 description: Quick explanation and example on how to use Power Automate to collect PowerShell script output/logs.
 layout: post
-tags: post
-publish_date: 03-10-2023
+tags: [powershell, power-automate, automation]
+date: 2023-10-03
 ---
 
 ## Intro

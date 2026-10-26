@@ -1,0 +1,20 @@
+---
+layout: base
+title: Posts
+description: Articles on infrastructure, automation and things I build.
+permalink: /posts/
+---
+{% from "partials/entry.njk" import render as renderEntry %}
+<header class="page-intro"><p class="eyebrow">Field journal</p><h1>Posts</h1><p>{{ description }}</p></header>
+<div data-content-search="post" data-index="/post-search.json">
+{% from "partials/search-controls.njk" import render as searchControls %}
+{{ searchControls("posts", collections.post, "Search articles...") }}
+<div class="entry-list" id="posts-results">
+{% set entryType = "post" %}{% set entryHeading = 2 %}{% set entryVariant = "full" %}
+{% for entry in collections.post | newestFirst %}
+  {{ renderEntry(entry, entryType, entryVariant, entryHeading) }}
+{% else %}<p>No posts published yet.</p>{% endfor %}
+</div>
+</div>
+<noscript><p>All posts are listed above. Use your browser's Find command to search this page.</p></noscript>
+<script defer src="/assets/js/content-search.js"></script>

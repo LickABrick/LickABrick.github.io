@@ -1,0 +1,9 @@
+{% if published %}
+{% set updated = modified | isUpdated(published) %}
+<p class="meta">
+  {% if compact and updated %}Updated <time datetime="{{ modified | publishedISO }}">{{ modified | displayDate }}</time>{% else %}
+  Published <time datetime="{{ published | publishedISO }}">{{ published | displayDate }}</time>
+  {% if updated %} · Updated <time datetime="{{ modified | publishedISO }}">{{ modified | displayDate }}</time>{% endif %}{% endif %}
+  {% if verified %} · Verified <time datetime="{{ verified | publishedISO }}">{{ verified | displayDate }}</time>{% endif %}
+</p>
+{% endif %}
