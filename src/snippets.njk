@@ -12,10 +12,10 @@ permalink: /snippets/
 </form>
 <p id="search-status" class="meta" role="status" hidden></p>
 <div class="entry-list" id="snippet-results">
-{% set isSnippet = true %}
+{% set isSnippet = true %}{% set headingLevel = 2 %}{% set compactPreview = false %}
 {% for entry in collections.snippet | newestFirst %}
   {% include "partials/entry.njk" %}
-{% endfor %}
+{% else %}<p>No snippets published yet.</p>{% endfor %}
 </div>
 <noscript><p>All snippets are listed above. Use your browser's Find command to search titles and descriptions.</p></noscript>
 <script defer src="/assets/js/snippets.js"></script>
