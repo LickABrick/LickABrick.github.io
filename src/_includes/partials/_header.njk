@@ -1,7 +1,12 @@
-<nav aria-label="Primary" class="flex flex-wrap items-center gap-2 px-4 py-2 bg-theme-300 text-shark-950">
-  <a href="/" class="no-underline text-shark-950">LickABrick.github.io</a>
-  <div class="ml-auto flex gap-3">
-    <a href="/" class="no-underline text-shark-950"{% if page.url == '/' %} aria-current="page"{% endif %}>Posts</a>
-    <a href="/snippets/" class="no-underline text-shark-950"{% if '/snippets/' in page.url %} aria-current="page"{% endif %}>Snippets</a>
-  </div>
-</nav>
+<header class="site-header">
+  <nav aria-label="Primary">
+    <a class="brand" href="/">LickABrick_</a>
+    <div class="nav-links">
+      <a href="/"{% if page.url == '/' or '/posts/' in page.url %} aria-current="page"{% endif %}>Posts</a>
+      <a href="/snippets/"{% if '/snippets/' in page.url %} aria-current="page"{% endif %}>Snippets</a>
+    </div>
+  </nav>
+  <svg class="barcode" viewBox="0 0 104 64" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <path fill="currentColor" d="M0 0h12v64H0z M15 0h9v26h-9z M15 30h9v34h-9z M28 0h7v64h-7z M40 4h6v56h-6z M49 0h4v21h-4z M49 25h4v39h-4z M58 8h8v48h-8z M71 0h3v64h-3z M80 12h5v18h-5z M80 34h5v22h-5z M91 5h2v54h-2z M100 18h3v29h-3z"/>
+  </svg>
+</header>

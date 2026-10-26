@@ -1,20 +1,17 @@
 ---
 layout: base
-title: Technical articles
-description: Technical articles on PowerShell, automation and system administration.
+title: Infrastructure, automation and things I build
+description: Technical articles on infrastructure, automation and things I build.
 tags: page
 ---
-
-<h1 class="text-2xl text-theme-300 mb-6">Posts</h1>
-<div class="flex flex-col gap-6">
-    {% for post in collections.post | newestFirst %}
-    <div class="flex flex-col gap-2">
-        <a class="text-2xl font-semibold text-theme-300" href="{{ post.url }}">{{ post.data.title }}</a>
-        <p class="text-neutral-50 pb-4">{{ post.data.description }}</p>
-        {% if post.data.publish_date %}
-        <time class="text-theme-300 self-end" datetime="{{ post.data.publish_date | publishedISO }}">{{ post.data.publish_date }}</time>
-        {% endif %}
-        <hr class="border-theme-300">
-    </div>
-    {% endfor %}
+<header class="page-intro"><p class="eyebrow">Field journal</p><h1>Posts</h1><p>Notes on infrastructure, automation and things I build.</p></header>
+<div class="entry-list">
+{% for post in collections.post | newestFirst %}
+  <section class="entry">
+    <p class="meta"><time datetime="{{ post.data.publish_date | publishedISO }}">{{ post.data.publish_date }}</time></p>
+    <h2><a href="{{ post.url }}">{{ post.data.title }}</a></h2>
+    <p>{{ post.data.description }}</p>
+    {% if post.data.tags %}<p class="tags">{% for tag in post.data.tags %}{% if tag != 'post' %}<span>#{{ tag }}</span>{% endif %}{% endfor %}</p>{% endif %}
+  </section>
+{% endfor %}
 </div>
