@@ -1,25 +1,22 @@
-for (const [index, pre] of [...document.querySelectorAll("pre")].entries()) {
-    const code = pre.querySelector("code");
-    if (!code) continue;
-    const wrapper = document.createElement("div");
-    wrapper.className = "code-block";
-    pre.before(wrapper);
-    wrapper.append(pre);
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "copy-button";
-    button.textContent = "Copy";
+for (const [index, block] of [...document.querySelectorAll(".code-block")].entries()) {
+    const code = block.querySelector("code");
+    const button = block.querySelector(".copy-button");
+    const status = block.querySelector(".copy-status");
+    if (!code || !button || !status) continue;
+    button.hidden = false;
     button.setAttribute("aria-label", `Copy code block ${index + 1}`);
-    const status = document.createElement("span");
-    status.className = "copy-status";
-    status.setAttribute("role", "status");
-    wrapper.prepend(button, status);
+    let reset;
     button.addEventListener("click", async () => {
+        clearTimeout(reset);
+        status.textContent = "";
         try {
             await navigator.clipboard.writeText(code.textContent);
+            button.textContent = "Copied";
             status.textContent = "Copied to clipboard.";
         } catch {
+            button.textContent = "Copy";
             status.textContent = "Copy unavailable. Select the code and copy it manually.";
         }
+        reset = setTimeout(() => { button.textContent = "Copy"; status.textContent = ""; }, 2500);
     });
 }
