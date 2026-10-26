@@ -6,7 +6,21 @@
       <a href="/snippets/"{% if '/snippets/' in page.url %} aria-current="page"{% endif %}>Snippets</a>
     </div>
   </nav>
-  <svg class="barcode" viewBox="0 0 104 64" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-    <path fill="currentColor" d="M0 0h12v64H0z M15 0h9v26h-9z M15 30h9v34h-9z M28 0h7v64h-7z M40 4h6v56h-6z M49 0h4v21h-4z M49 25h4v39h-4z M58 8h8v48h-8z M71 0h3v64h-3z M80 12h5v18h-5z M80 34h5v22h-5z M91 5h2v54h-2z M100 18h3v29h-3z"/>
+  {# Fixed SVG coordinates keep pixels square; mobile uses a shorter dissolve. #}
+  <svg class="pixel-dissolve" width="100" height="52" aria-hidden="true" focusable="false">
+    <path class="pixels-desktop" fill="currentColor" d="M0 0H6V7H11V14H5V21H9V29H4V36H10V44H6V52H0Z
+      M12 1h7v7h-7z M8 16h6v6H8z M11 29h7v7h-7z M10 44h6v6h-6z
+      M21 8h6v6h-6z M17 20h7v7h-7z M22 36h6v6h-6z M19 46h5v5h-5z
+      M31 2h5v5h-5z M29 17h6v6h-6z M32 29h5v5h-5z M32 44h5v5h-5z
+      M41 10h4v4h-4z M39 23h5v5h-5z M43 37h4v4h-4z
+      M51 3h4v4h-4z M49 18h4v4h-4z M53 29h3v3h-3z M51 46h3v3h-3z
+      M62 12h3v3h-3z M61 37h3v3h-3z M70 24h2v2h-2z M72 45h2v2h-2z
+      M80 8h2v2h-2z M83 33h2v2h-2z M91 19h1v1h-1z M97 41h1v1h-1z"/>
+    <path class="pixels-mobile" fill="currentColor" d="M0 0H4V6H8V13H4V20H7V28H3V35H7V42H4V48H0Z
+      M9 2h6v6H9z M8 15h6v6H8z M8 29h6v6H8z M9 41h5v5H9z
+      M17 9h5v5h-5z M16 23h5v5h-5z M18 35h5v5h-5z
+      M25 2h4v4h-4z M25 17h4v4h-4z M26 30h3v3h-3z M26 44h3v3h-3z
+      M34 10h3v3h-3z M34 37h3v3h-3z M41 23h2v2h-2z M44 44h2v2h-2z
+      M49 8h1v1h-1z M53 33h1v1h-1z"/>
   </svg>
 </header>
