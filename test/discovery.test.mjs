@@ -29,12 +29,21 @@ test("flat snippet defaults, slug overrides and collision diagnostics", () => {
 test("tag directory is complete, homepage is capped, forms are associated and shared", async () => {
     const doc = parseHTML(await readFile("_site/tags/index.html", "utf8")).document;
     const links = [...doc.querySelectorAll(".topic-links a")].map(a => a.href);
+    const expectedTags = new Map();
     const home = parseHTML(await readFile("_site/index.html", "utf8")).document;
     assert.ok(home.querySelectorAll(".topic-links a").length <= 8);
     for (const link of home.querySelectorAll(".topic-links a")) assert.ok(links.includes(link.href));
     for (const type of ["posts", "snippets"]) {
         const archive = parseHTML(await readFile(`_site/${type}/index.html`, "utf8")).document;
         assert.ok(archive.querySelector('script[src="/assets/js/content-search.js"]'));
+        const used = new Set();
+        for (const entry of archive.querySelectorAll(".entry")) {
+            for (const link of entry.querySelectorAll(".tags a")) {
+                used.add(link.href);
+                expectedTags.set(link.href, (expectedTags.get(link.href) || 0) + 1);
+            }
+        }
+        assert.deepEqual([...archive.querySelectorAll("select option")].map(option => option.value).filter(Boolean).sort(), [...used].map(url => url.split("/")[2]).sort());
         const ids = [...archive.querySelectorAll("[id]")].map(el => el.id);
         assert.equal(new Set(ids).size, ids.length);
         assert.equal(archive.querySelector("form").hidden, true);
@@ -42,6 +51,10 @@ test("tag directory is complete, homepage is capped, forms are associated and sh
             assert.ok(archive.querySelector(`label[for="${control.id}"]`));
             assert.ok(archive.getElementById(control.getAttribute("aria-controls")));
         }
+    }
+    assert.deepEqual(links.slice().sort(), [...expectedTags.keys()].sort());
+    for (const link of doc.querySelectorAll(".topic-links a")) {
+        assert.ok(link.parentElement.textContent.includes(`(${expectedTags.get(link.href)})`));
     }
     const css = await readFile("src/assets/css/tailwind.css", "utf8");
     assert.ok(css.includes("--filter-control-height: 44px"));

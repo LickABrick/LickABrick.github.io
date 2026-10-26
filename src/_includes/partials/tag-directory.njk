@@ -1,5 +1,5 @@
 {% macro render(tags) %}
 <ul class="topic-links">
-{% for tag in tags %}<li data-tag-name="{{ tag.name }} {{ tag.label }}"><a href="{{ tag.url }}">#{{ tag.label }}</a> <span class="meta">({{ tag.count }} <span class="sr-only">content items</span>)</span></li>{% endfor %}
+{% for tag in tags %}<li data-tag-name="{{ tag.name }} {{ tag.label }}"><a href="{{ tag.url }}">#{{ tag.label }}</a> <span class="meta">({{ tag.count }})<span class="sr-only"> content items</span></span></li>{% endfor %}
 </ul>
 {% endmacro %}

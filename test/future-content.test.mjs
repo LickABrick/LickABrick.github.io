@@ -5,12 +5,13 @@ import path from "node:path";
 import { test } from "node:test";
 
 test("future content automatically gets search, tags and flat URLs; explicit permalinks survive tag changes", async () => {
-    const root = await mkdtemp(path.resolve(".cache/future-"));
+    const root = await mkdtemp(path.resolve("test-fixture-"));
     const src = path.join(root, "src");
     const output = path.join(root, "output");
-    const build = () => execFileSync(process.execPath, ["node_modules/@11ty/eleventy/cmd.cjs", `--input=${src}`, `--output=${output}`], { stdio: "pipe", env: { ...process.env, BLOG_PRODUCTION: "false" } });
+    const build = () => execFileSync(process.execPath, [path.resolve("node_modules/@11ty/eleventy/cmd.cjs"), "--input=src", "--output=output"], { cwd: root, stdio: "pipe", env: { ...process.env, BLOG_PRODUCTION: "false" } });
     try {
         await cp("src", src, { recursive: true });
+        await cp(".eleventy.js", path.join(root, ".eleventy.js"));
         // Directory data resolves its helper relative to the copied source tree.
         await cp("lib", path.join(root, "lib"), { recursive: true });
         const content = (type, extra = "") => `---\ntitle: Future ${type}\ndescription: Synthetic future content\ndate: 2025-01-01\ntags: [future-topic]\n${extra}---\nBodyOnlyNeedle command --flag\n`;
