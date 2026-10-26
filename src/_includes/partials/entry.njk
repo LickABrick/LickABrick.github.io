@@ -1,11 +1,11 @@
-<section class="entry"{% if isSnippet %} data-snippet-url="{{ entry.url }}"{% endif %}>
+<section class="entry{% if compactPreview %} entry-compact{% endif %}"{% if isSnippet %} data-snippet-url="{{ entry.url }}"{% endif %}>
   {% if isSnippet %}<p class="eyebrow">{{ entry.data.category }}{% if entry.data.platform %} / {{ entry.data.platform }}{% endif %}</p>{% else %}
   {% set published = entry.date %}{% set modified = entry.data.last_modified %}{% set verified = false %}{% set compact = false %}
   {% include "partials/dates.njk" %}{% endif %}
-  <h2><a href="{{ entry.url }}">{{ entry.data.title }}</a></h2>
-  <p>{{ entry.data.description }}</p>
-  {% set tags = entry.data.tags %}{% include "partials/tags.njk" %}
-  {% if isSnippet %}
+  {% if headingLevel == 3 %}<h3><a href="{{ entry.url }}">{{ entry.data.title }}</a></h3>{% else %}<h2><a href="{{ entry.url }}">{{ entry.data.title }}</a></h2>{% endif %}
+  {% if not compactPreview %}<p>{{ entry.data.description }}</p>{% endif %}
+  {% if not compactPreview %}{% set tags = entry.data.tags %}{% include "partials/tags.njk" %}{% endif %}
+  {% if isSnippet and not compactPreview %}
     {% set published = entry.date %}{% set modified = entry.data.last_modified %}{% set verified = entry.data.last_verified %}{% set compact = true %}
     {% include "partials/dates.njk" %}
   {% endif %}

@@ -1,13 +1,28 @@
 ---
 layout: base
 title: Infrastructure, automation and things I build
-description: Technical articles on infrastructure, automation and things I build.
+description: Infrastructure, automation and things I build.
 tags: page
 ---
-<header class="page-intro"><p class="eyebrow">Field journal</p><h1>Posts</h1><p>Notes on infrastructure, automation and things I build.</p></header>
-<div class="entry-list">
-{% set isSnippet = false %}
-{% for entry in collections.post | newestFirst %}
-  {% include "partials/entry.njk" %}
-{% endfor %}
-</div>
+<header class="page-intro"><h1>LickABrick_</h1><p>{{ description }}</p></header>
+{% set recentPosts = collections.post | newestFirst | head(5) %}
+{% set recentSnippets = collections.snippet | newestFirst | head(5) %}
+{% if recentPosts.length %}
+<section class="index-section" aria-labelledby="recent-posts">
+  <div class="section-heading"><h2 id="recent-posts">Recent Posts</h2><a href="/posts/">View all Posts</a></div>
+  <div class="entry-list">
+  {% set isSnippet = false %}{% set headingLevel = 3 %}{% set compactPreview = false %}
+  {% for entry in recentPosts %}{% include "partials/entry.njk" %}{% endfor %}
+  </div>
+</section>
+{% endif %}
+{% if recentSnippets.length %}
+<section class="index-section" aria-labelledby="recent-snippets">
+  <div class="section-heading"><h2 id="recent-snippets">Recent Snippets</h2><a href="/snippets/">View all Snippets</a></div>
+  <div class="entry-list">
+  {% set isSnippet = true %}{% set headingLevel = 3 %}{% set compactPreview = true %}
+  {% for entry in recentSnippets %}{% include "partials/entry.njk" %}{% endfor %}
+  </div>
+</section>
+{% endif %}
+{% if not recentPosts.length and not recentSnippets.length %}<p>No entries published yet.</p>{% endif %}

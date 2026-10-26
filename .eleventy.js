@@ -41,6 +41,7 @@ module.exports = function (eleventyConfig) {
         ...(modified && asDate(modified) > asDate(published) ? { dateModified: asDate(modified).toISOString() } : {}),
     }));
     eleventyConfig.addFilter("rssDate", value => asDate(value).toUTCString());
+    eleventyConfig.addFilter("head", (items, count) => items.slice(0, count));
     eleventyConfig.addFilter("newestFirst", items => [...items].sort((a, b) =>
         asDate(b.date) - asDate(a.date)));
     return {
