@@ -6,6 +6,13 @@ tags: page
 ---
 {% from "partials/entry.njk" import render as renderEntry %}
 <header class="page-intro"><h1>Infrastructure &amp; Automation</h1><p>{{ description }}</p></header>
+{% set topics = collections.publicTags | frequentTags %}
+{% if topics.length %}
+<section class="topic-discovery" aria-labelledby="explore-tags">
+  <div class="section-heading"><h2 id="explore-tags">Explore Tags</h2><a href="/tags/">Browse all tags</a></div>
+  {% from "partials/tag-directory.njk" import render as tagLinks %}{{ tagLinks(topics) }}
+</section>
+{% endif %}
 {% set recentPosts = collections.post | newestFirst | head(5) %}
 {% set recentSnippets = collections.snippet | newestFirst | head(5) %}
 {% if recentPosts.length %}

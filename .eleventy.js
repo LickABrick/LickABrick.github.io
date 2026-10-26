@@ -1,4 +1,4 @@
-const { publicTags, tagCatalog } = require("./lib/tags.cjs");
+const { publicTags, tagCatalog, frequentTags } = require("./lib/tags.cjs");
 const syntaxHighlight = require("@11ty/eleventy-plugin-syntaxhighlight");
 
 function asDate(value) {
@@ -23,6 +23,8 @@ module.exports = function (eleventyConfig) {
     eleventyConfig.amendLibrary("md", require("./lib/code-blocks.cjs"));
     eleventyConfig.addCollection("publicTags", api => tagCatalog(api.getAll().filter(item =>
         (item.data.tags || []).some(tag => ["post", "snippet"].includes(tag)))));
+    eleventyConfig.addFilter("frequentTags", frequentTags);
+    eleventyConfig.addPassthroughCopy("src/assets/js/tag-search.js");
     eleventyConfig.addFilter("contentTags", publicTags);
     eleventyConfig.addFilter("archiveTags", items => tagCatalog(items));
     eleventyConfig.addFilter("searchIndex", items => items.map(item => ({
