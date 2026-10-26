@@ -2,7 +2,7 @@
   <nav aria-label="Primary">
     <a class="brand" href="/">LickABrick<span class="brand-cursor" aria-hidden="true">_</span></a>
     <div class="nav-links">
-      <a href="/"{% if page.url == '/' or '/posts/' in page.url %} aria-current="page"{% endif %}>Posts</a>
+      <a href="/posts/"{% if '/posts/' in page.url %} aria-current="page"{% endif %}>Posts</a>
       <a href="/snippets/"{% if '/snippets/' in page.url %} aria-current="page"{% endif %}>Snippets</a>
     </div>
   </nav>
