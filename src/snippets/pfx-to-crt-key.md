@@ -4,7 +4,6 @@ description: Extract a certificate, private key and optional CA chain from a PKC
 date: 2026-10-26
 platform: Cross-platform (Unix shell examples)
 tags: [openssl, certificates, pfx]
-permalink: /snippets/certificates/pfx-to-crt-key/
 ---
 
 ## Prepare

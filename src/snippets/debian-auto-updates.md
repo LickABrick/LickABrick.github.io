@@ -5,7 +5,6 @@ date: 2024-08-16
 last_modified: 2026-10-26
 platform: Debian 12 / 13
 tags: [linux, debian, unattended-upgrades]
-permalink: /snippets/linux/debian-auto-updates/
 ---
 
 ## Install packages
