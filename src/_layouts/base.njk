@@ -30,7 +30,7 @@
   <link rel="stylesheet" href="/assets/css/tailwind.css">
   <link rel="stylesheet" href="/assets/css/prism-theme.css">
   <script defer src="/assets/js/site.js"></script>
-  <script defer src="https://umami.cl01.krokbv.com/script.js" data-website-id="b85f0592-1efc-4110-936d-54f3f07c1995"></script>
+  {% if analytics.production %}<script defer src="/assets/js/analytics.js"></script>{% endif %}
 </head>
 <body class="bg-shark-950 pt-8">
   <div class="site-container">
