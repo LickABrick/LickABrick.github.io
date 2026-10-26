@@ -1,5 +1,5 @@
 <section class="entry{% if compactPreview %} entry-compact{% endif %}"{% if isSnippet and not compactPreview %} data-snippet-url="{{ entry.url }}"{% endif %}>
-  {% if isSnippet %}{% if entry.data.category %}<p class="eyebrow">{{ entry.data.category }}{% if entry.data.platform and not compactPreview %} / {{ entry.data.platform }}{% endif %}</p>{% endif %}{% else %}
+  {% if not isSnippet %}
   {% set published = entry.date %}{% set modified = entry.data.last_modified %}{% set verified = false %}{% set compact = false %}
   {% include "partials/dates.njk" %}{% endif %}
   {% if headingLevel == 3 %}<h3><a href="{{ entry.url }}">{{ entry.data.title }}</a></h3>{% else %}<h2><a href="{{ entry.url }}">{{ entry.data.title }}</a></h2>{% endif %}

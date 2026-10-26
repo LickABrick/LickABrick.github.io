@@ -1,3 +1,4 @@
+const { publicTags, tagCatalog } = require("./lib/tags.cjs");
 const syntaxHighlight = require("@11ty/eleventy-plugin-syntaxhighlight");
 
 function asDate(value) {
@@ -20,12 +21,13 @@ module.exports = function (eleventyConfig) {
     eleventyConfig.addPassthroughCopy("src/assets/fonts/FiraCode-Regular.ttf");
     eleventyConfig.addPlugin(syntaxHighlight, { alwaysWrapLineHighlights: true });
     eleventyConfig.amendLibrary("md", require("./lib/code-blocks.cjs"));
-    eleventyConfig.addFilter("contentTags", tags => (Array.isArray(tags) ? tags : tags ? [tags] : []).filter(tag => !["post", "snippet"].includes(tag)));
-    eleventyConfig.addFilter("categories", items => [...new Set(items.map(item => item.data.category))].sort());
+    eleventyConfig.addFilter("contentTags", publicTags);
+    eleventyConfig.addFilter("snippetTags", items => tagCatalog(items));
     eleventyConfig.addFilter("searchIndex", items => items.map(item => ({
-        url: item.url, category: item.data.category,
-        text: [item.data.title, item.data.description, item.data.category, item.data.platform,
-            ...(item.data.tags || []), item.templateContent.replace(/<[^>]*>/g, " ")].join(" ").toLowerCase(),
+        url: item.url, tags: publicTags(item.data.tags).map(tag => tag.slug),
+        text: [item.data.title, item.data.description, item.data.platform,
+            ...publicTags(item.data.tags).map(tag => tag.label),
+            item.templateContent.replace(/<[^>]*>/g, " ")].join(" ").toLowerCase(),
     })));
     eleventyConfig.addFilter("absoluteUrl", (path, base) => new URL(path, base).href);
     eleventyConfig.addFilter("publishedISO", value => asDate(value).toISOString());

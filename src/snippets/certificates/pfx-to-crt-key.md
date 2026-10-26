@@ -2,9 +2,8 @@
 title: Convert PFX to CRT and KEY using OpenSSL
 description: Extract a certificate, private key and optional CA chain from a PKCS#12 archive using OpenSSL 3.
 date: 2026-10-26
-category: Certificates
 platform: Cross-platform (Unix shell examples)
-tags: [snippet, openssl, certificates, pfx]
+tags: [openssl, certificates, pfx]
 permalink: /snippets/certificates/pfx-to-crt-key/
 ---
 

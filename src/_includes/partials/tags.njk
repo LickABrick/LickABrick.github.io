@@ -1,2 +1,2 @@
 {% set visibleTags = tags | contentTags %}
-{% if visibleTags.length %}<p class="tags">{% for tag in visibleTags %}<span>#{{ tag }}</span>{% endfor %}</p>{% endif %}
+{% if visibleTags.length %}<p class="tags">{% for tag in visibleTags %}<span>#{{ tag.label }}</span>{% endfor %}</p>{% endif %}

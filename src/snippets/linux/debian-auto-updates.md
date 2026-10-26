@@ -3,9 +3,8 @@ title: Automatic security updates on Debian 12 and 13
 description: Configure unattended-upgrades with security-only origins and optional automatic reboots.
 date: 2024-08-16
 last_modified: 2026-10-26
-category: Linux
 platform: Debian 12 / 13
-tags: [snippet, linux, debian, unattended-upgrades]
+tags: [linux, debian, unattended-upgrades]
 permalink: /snippets/linux/debian-auto-updates/
 ---
 

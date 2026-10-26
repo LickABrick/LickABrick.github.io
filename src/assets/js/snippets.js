@@ -1,6 +1,5 @@
 const form = document.querySelector("#snippet-search");
 const query = document.querySelector("#query");
-const category = document.querySelector("#category");
 const status = document.querySelector("#search-status");
 
 async function enableSearch() {
@@ -14,8 +13,7 @@ async function enableSearch() {
             let count = 0;
             for (const entry of entries) {
                 const item = index.get(entry.dataset.snippetUrl);
-                const matches = item && (!category.value || item.category === category.value)
-                    && terms.every(term => item.text.includes(term));
+                const matches = item && terms.every(term => item.text.includes(term));
                 entry.hidden = !matches;
                 if (matches) count++;
             }
@@ -26,7 +24,7 @@ async function enableSearch() {
         form.addEventListener("submit", event => event.preventDefault());
         form.addEventListener("input", update);
         form.addEventListener("change", update);
-        form.addEventListener("reset", () => { query.value = ""; category.value = ""; update(); query.focus(); });
+        form.addEventListener("reset", () => { query.value = ""; update(); query.focus(); });
         update();
     } catch {
         // The complete server-rendered list remains available if loading fails.
