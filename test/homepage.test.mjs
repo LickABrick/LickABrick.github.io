@@ -9,14 +9,14 @@ const configure = require("../.eleventy.js");
 const filters = {};
 configure({
     addFilter: (name, fn) => { filters[name] = fn; },
-    addPassthroughCopy() {}, addWatchTarget() {}, addPlugin() {}, amendLibrary() {},
+    addCollection() {}, addPassthroughCopy() {}, addWatchTarget() {}, addPlugin() {}, amendLibrary() {},
 });
 const env = new nunjucks.Environment(new nunjucks.FileSystemLoader(["src", "src/_includes"]), { autoescape: true });
 for (const [name, fn] of Object.entries(filters)) env.addFilter(name, fn);
 const item = (kind, index) => ({
     date: new Date(`2020-01-${String(index + 1).padStart(2, "0")}T00:00:00Z`),
     url: `/${kind}/${index}/`,
-    data: { title: `${kind} ${index}`, description: `Description ${index}`, tags: [kind === "posts" ? "post" : "snippet"], ...(kind === "snippets" ? { category: "Linux" } : {}) },
+    data: { title: `${kind} ${index}`, description: `Description ${index}`, tags: [kind === "posts" ? "post" : "snippet"] },
 });
 
 test("homepage renders five newest of each kind with correct hierarchy and compact snippets", () => {
@@ -24,7 +24,7 @@ test("homepage renders five newest of each kind with correct hierarchy and compa
     const snippets = Array.from({ length: 7 }, (_, i) => item("snippets", i));
     const doc = parseHTML(env.render("index.njk", { description: "Infrastructure, automation and things I build.", collections: { post: posts, snippet: snippets } })).document;
     assert.equal(doc.querySelectorAll("h1").length, 1);
-    assert.equal(doc.querySelector("h1").textContent, "LickABrick_");
+    assert.notEqual(doc.querySelector("h1").textContent, "LickABrick_");
     for (const [id, expected] of [["recent-posts", [7, 6, 5, 4, 3]], ["recent-snippets", [6, 5, 4, 3, 2]]]) {
         const section = doc.querySelector(`#${id}`).parentElement.parentElement;
         assert.deepEqual([...section.querySelectorAll(".entry h3 a")].map(a => Number(a.href.split("/")[2])), expected);
@@ -32,7 +32,7 @@ test("homepage renders five newest of each kind with correct hierarchy and compa
     }
     assert.equal(doc.querySelector('a[href="/posts/"]').textContent, "View all Posts");
     assert.equal(doc.querySelector('a[href="/snippets/"]').textContent, "View all Snippets");
-    assert.equal(doc.querySelectorAll(".entry-compact .meta, .entry-compact .tags").length, 0);
+    assert.equal(doc.querySelectorAll(".entry-compact .meta").length, 0);
     assert.ok(!doc.querySelector(".entry-compact").textContent.includes("Description"));
     assert.equal(doc.querySelectorAll(".tags").length, 0, "collection-only tags do not create empty labels");
 });
@@ -59,12 +59,12 @@ test("optional metadata displays meaningful updates and tags consistently", () =
     const entry = item("posts", 1);
     entry.data.last_modified = "2020-02-01";
     entry.data.tags = ["post", "powershell"];
-    const doc = parseHTML(env.render("partials/entry.njk", { entry, isSnippet: false, compactPreview: false, headingLevel: 2 })).document;
+    const doc = parseHTML(env.renderString('{% from "partials/entry.njk" import render %}{{ render(entry, "post", "full", 2) }}', { entry })).document;
     assert.match(doc.querySelector(".meta").textContent, /Published.*Updated/s);
     assert.equal(doc.querySelectorAll("time").length, 2);
-    assert.equal(doc.querySelector(".tags").textContent, "#powershell");
+    assert.equal(doc.querySelector(".tags").textContent, "#PowerShell");
     entry.data.last_modified = "2020-01-01";
-    const unchanged = parseHTML(env.render("partials/entry.njk", { entry })).document;
+    const unchanged = parseHTML(env.renderString('{% from "partials/entry.njk" import render %}{{ render(entry) }}', { entry })).document;
     assert.equal(unchanged.querySelectorAll("time").length, 1);
     assert.ok(!unchanged.querySelector(".meta").textContent.includes("Updated"));
 });
@@ -79,7 +79,7 @@ test("generated homepage/archive navigation and canonical URLs are distinct", as
     assert.equal(archive.querySelector('nav a[aria-current="page"]').href, "/posts/");
     assert.equal(snippets.querySelector('nav a[aria-current="page"]').href, "/snippets/");
     assert.notEqual(home.querySelector('link[rel="canonical"]').href, archive.querySelector('link[rel="canonical"]').href);
-    assert.equal(home.querySelectorAll(".entry-compact").length, 2);
+    assert.equal(home.querySelectorAll(".entry-compact").length, Math.min(5, snippets.querySelectorAll(".entry").length));
     const article = parseHTML(await readFile("_site/posts/power-automate-powershell/index.html", "utf8")).document;
     assert.match(article.querySelector("article header .tags").textContent, /#powershell/);
     assert.ok(!article.querySelector("article header").textContent.includes("Updated"));

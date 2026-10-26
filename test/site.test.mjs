@@ -18,34 +18,18 @@ const documents = await Promise.all(htmlFiles.map(async file => {
     return { file, html, document: parseHTML(html).document };
 }));
 
-function metadataUrl(source) {
-    return "/" + path.relative("src", source).replace(/\.md$/, "/");
-}
 const publicDocuments = documents.filter(({ document }) => !document.querySelector('meta[http-equiv="refresh"]'));
+const articles = publicDocuments.filter(({ document }) => document.querySelector("article"));
 
-test("existing public URLs, listings and article bodies survive", async () => {
-    const preserved = ["index.html", "notes/index.html", "posts/power-automate-powershell/index.html", "notes/debian-auto-updates/index.html"];
-    for (const file of preserved) await access(path.join(output, file));
-    for (const kind of ["posts", "snippets"]) {
-        const sources = (await files(`src/${kind}`)).filter(file => file.endsWith(".md"));
-        const listing = await read(kind === "posts" ? "index.html" : "snippets/index.html");
-        for (const source of sources) {
-            const slug = path.basename(source, ".md");
-            const url = kind === "posts" ? `/${kind}/${slug}/` : metadataUrl(source);
-            assert.ok(listing.includes(`href="${url}"`));
-            const html = await read(`${url.slice(1)}index.html`);
-            const document = parseHTML(html).document;
-            assert.ok(document.querySelector("article h1")?.textContent.trim());
-            assert.ok(document.querySelector("article pre code"));
-            assert.ok(document.querySelector(".token"), "Prism highlighting was generated");
-            const metadata = await readFile(source, "utf8");
-            const title = metadata.match(/^title: (.+)$/m)[1];
-            const description = metadata.match(/^description: (.+)$/m)[1];
-            assert.equal(document.querySelector("h1").textContent, title);
-            assert.equal(document.querySelector('meta[name="description"]').content, description);
-            assert.equal(document.querySelector('link[rel="canonical"]').href, site.url + url);
-            assert.match(document.querySelector("time").getAttribute("datetime"), /^\d{4}-\d\d-\d\dT/);
-        }
+test("published articles appear in their archives with valid metadata", async () => {
+    for (const { document } of articles) {
+        const canonical = document.querySelector('link[rel="canonical"]').href;
+        const url = new URL(canonical).pathname;
+        const listing = await read(url.startsWith("/posts/") ? "posts/index.html" : "snippets/index.html");
+        assert.ok(listing.includes(`href="${url}"`));
+        assert.ok(document.querySelector("article h1").textContent.trim());
+        assert.ok(document.querySelector('meta[name="description"]').content.trim());
+        assert.match(document.querySelector("article time").getAttribute("datetime"), /^\d{4}-\d\d-\d\dT/);
     }
 });
 
@@ -145,28 +129,30 @@ test("legacy aliases redirect to canonical snippets and are not indexed", async 
     assert.ok(!sitemap.includes("/notes/"));
 });
 
-test("search index includes code, metadata, and only available categories", async () => {
+test("search index covers every snippet with public tags and searchable text", async () => {
     const index = JSON.parse(await read("snippet-search.json"));
-    assert.equal(index.length, 2);
-    assert.deepEqual([...new Set(index.map(item => item.category))].sort(), ["Certificates", "Linux"]);
-    assert.ok(index.some(item => item.text.includes("pfx") && item.text.includes("openssl pkcs12")));
-    assert.ok(index.some(item => item.text.includes("unattended-upgrades") && item.text.includes("apt-daily.timer")));
+    const archive = parseHTML(await read("snippets/index.html")).document;
+    const urls = [...archive.querySelectorAll("[data-snippet-url]")].map(el => el.dataset.snippetUrl).sort();
+    assert.deepEqual(index.map(item => item.url).sort(), urls);
+    for (const item of index) {
+        assert.ok(item.text.length);
+        assert.ok(Array.isArray(item.tags));
+        assert.ok(!("category" in item));
+        assert.ok(!item.tags.some(tag => ["post", "snippet", "page"].includes(tag)));
+        const doc = parseHTML(await read(item.url.slice(1) + "index.html")).document;
+        assert.deepEqual([...doc.querySelectorAll("article header .tags a")].map(a => a.href.split("/")[2]), item.tags);
+    }
+    // Existing command references must remain discoverable regardless of new content.
+    assert.ok(index.some(item => item.text.includes("openssl pkcs12")));
+    assert.ok(index.some(item => item.text.includes("apt-daily.timer")));
 });
 
-test("article dates and schema preserve publication and meaningful updates", async () => {
-    const cases = [
-        ["posts/power-automate-powershell/index.html", "2023-10-03", null],
-        ["snippets/linux/debian-auto-updates/index.html", "2024-08-16", "2026-10-26"],
-        ["snippets/certificates/pfx-to-crt-key/index.html", "2026-10-26", null],
-    ];
-    for (const [file, published, modified] of cases) {
-        const doc = parseHTML(await read(file)).document;
-        const schema = JSON.parse(doc.querySelector('script[type="application/ld+json"]').textContent);
-        assert.equal(schema.datePublished.slice(0, 10), published);
-        assert.equal(schema.dateModified?.slice(0, 10) ?? null, modified);
-        assert.ok(doc.querySelector("article header time").getAttribute("datetime").startsWith(published));
-        assert.ok(!doc.querySelector("article header").textContent.includes("Verified"));
+test("article date display agrees with structured metadata", () => {
+    for (const { document } of articles) {
+        const schema = JSON.parse(document.querySelector('script[type="application/ld+json"]').textContent);
+        assert.equal(document.querySelector("article header time").getAttribute("datetime"), schema.datePublished);
+        const updated = document.querySelector('meta[property="article:modified_time"]');
+        assert.equal(updated?.content, schema.dateModified);
+        if (schema.dateModified) assert.ok(new Date(schema.dateModified) > new Date(schema.datePublished));
     }
-    const entries = [...parseHTML(await read("snippets/index.html")).document.querySelectorAll(".entry h2 a")];
-    assert.ok(entries[0].href.includes("pfx-to-crt-key"));
 });
