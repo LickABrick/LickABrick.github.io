@@ -8,6 +8,7 @@ permalink: /snippets/
 <form id="snippet-search" class="search-controls" hidden role="search" aria-label="Find snippets">
   <div><label for="query">Search commands and content</label><input id="query" aria-controls="snippet-results" type="search" autocomplete="off" placeholder="Try pfx or unattended-upgrades"></div>
 
+  <div><label for="tag">Tag</label><select id="tag" aria-controls="snippet-results"><option value="">All tags</option>{% for tag in collections.snippet | snippetTags %}<option value="{{ tag.slug }}">{{ tag.label }}</option>{% endfor %}</select></div>
   <button type="reset">Reset</button>
 </form>
 <p id="search-status" class="meta" role="status" hidden></p>
