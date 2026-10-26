@@ -120,19 +120,23 @@ test("RSS, sitemap and robots expose only canonical production URLs", async () =
 
 test("legacy aliases redirect to canonical snippets and are not indexed", async () => {
     const sitemap = await read("sitemap.xml");
-    for (const [legacy, target] of [["notes/index.html", "/snippets/"], ["notes/debian-auto-updates/index.html", "/snippets/linux/debian-auto-updates/"]]) {
+    for (const [legacy, target] of [["snippets/linux/debian-auto-updates/index.html", "/snippets/debian-auto-updates/"], ["snippets/certificates/pfx-to-crt-key/index.html", "/snippets/pfx-to-crt-key/"], ["notes/index.html", "/snippets/"], ["notes/debian-auto-updates/index.html", "/snippets/debian-auto-updates/"]]) {
         const doc = parseHTML(await read(legacy)).document;
         assert.equal(doc.querySelector('link[rel="canonical"]').href, site.url + target);
         assert.equal(doc.querySelector('meta[name="robots"]').content, "noindex, follow");
         assert.equal(doc.querySelector('meta[http-equiv="refresh"]').content, "0;url=" + target);
+        assert.equal(doc.querySelector("a").href, target);
+        const destination = parseHTML(await read(target.slice(1) + "index.html")).document;
+        assert.equal(destination.querySelector('meta[http-equiv="refresh"]'), null);
+        assert.ok(!sitemap.includes(site.url + "/" + legacy.replace("index.html", "")));
     }
     assert.ok(!sitemap.includes("/notes/"));
 });
 
-test("search index covers every snippet with public tags and searchable text", async () => {
-    const index = JSON.parse(await read("snippet-search.json"));
-    const archive = parseHTML(await read("snippets/index.html")).document;
-    const urls = [...archive.querySelectorAll("[data-snippet-url]")].map(el => el.dataset.snippetUrl).sort();
+for (const type of ["post", "snippet"]) test(`${type} index covers all published entries with public tags and searchable text`, async () => {
+    const index = JSON.parse(await read(`${type}-search.json`));
+    const archive = parseHTML(await read(`${type}s/index.html`)).document;
+    const urls = [...archive.querySelectorAll("[data-content-url]")].map(el => el.dataset.contentUrl).sort();
     assert.deepEqual(index.map(item => item.url).sort(), urls);
     for (const item of index) {
         assert.ok(item.text.length);
@@ -143,8 +147,8 @@ test("search index covers every snippet with public tags and searchable text", a
         assert.deepEqual([...doc.querySelectorAll("article header .tags a")].map(a => a.href.split("/")[2]), item.tags);
     }
     // Existing command references must remain discoverable regardless of new content.
-    assert.ok(index.some(item => item.text.includes("openssl pkcs12")));
-    assert.ok(index.some(item => item.text.includes("apt-daily.timer")));
+    if (type === "snippet") assert.ok(index.some(item => item.text.includes("openssl pkcs12")));
+    if (type === "snippet") assert.ok(index.some(item => item.text.includes("apt-daily.timer")));
 });
 
 test("article date display agrees with structured metadata", () => {
