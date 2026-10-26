@@ -12,12 +12,30 @@ if (navigator.doNotTrack !== "1" && !navigator.globalPrivacyControl && !location
             has(_target, key) { return key === "q"; },
         });
     })();
-    window.op("init", {
+    const config = {
         apiUrl: "https://analytics.krokbv.com/api",
         clientId: "566c6043-b91d-4f0e-87ea-2019b1e3efcd",
         trackScreenViews: true,
         trackOutgoingLinks: true,
         trackAttributes: false,
+    };
+    // The SDK's supported filter runs before sending events. Drop URL queries,
+    // fragments and referrer paths rather than sending search terms or tokens.
+    window.op("init", {
+        ...config,
+        filter(event) {
+            const properties = event.payload?.properties;
+            if (properties) {
+                for (const key of ["__path", "__referrer", "href"]) {
+                    if (!properties[key]) continue;
+                    try {
+                        const url = new URL(properties[key]);
+                        properties[key] = key === "__referrer" ? url.origin : url.origin + url.pathname;
+                    } catch { delete properties[key]; }
+                }
+            }
+            return true;
+        },
     });
     const script = document.createElement("script");
     script.src = "https://openpanel.dev/op1.js";

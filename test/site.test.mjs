@@ -18,17 +18,22 @@ const documents = await Promise.all(htmlFiles.map(async file => {
     return { file, html, document: parseHTML(html).document };
 }));
 
+function metadataUrl(source) {
+    return "/" + path.relative("src", source).replace(/\.md$/, "/");
+}
+const publicDocuments = documents.filter(({ document }) => !document.querySelector('meta[http-equiv="refresh"]'));
+
 test("existing public URLs, listings and article bodies survive", async () => {
     const preserved = ["index.html", "notes/index.html", "posts/power-automate-powershell/index.html", "notes/debian-auto-updates/index.html"];
     for (const file of preserved) await access(path.join(output, file));
-    for (const kind of ["posts", "notes"]) {
+    for (const kind of ["posts", "snippets"]) {
         const sources = (await files(`src/${kind}`)).filter(file => file.endsWith(".md"));
-        const listing = await read(kind === "posts" ? "index.html" : "notes/index.html");
+        const listing = await read(kind === "posts" ? "index.html" : "snippets/index.html");
         for (const source of sources) {
             const slug = path.basename(source, ".md");
-            const url = `/${kind}/${slug}/`;
+            const url = kind === "posts" ? `/${kind}/${slug}/` : metadataUrl(source);
             assert.ok(listing.includes(`href="${url}"`));
-            const html = await read(`${kind}/${slug}/index.html`);
+            const html = await read(`${url.slice(1)}index.html`);
             const document = parseHTML(html).document;
             assert.ok(document.querySelector("article h1")?.textContent.trim());
             assert.ok(document.querySelector("article pre code"));
@@ -45,7 +50,7 @@ test("existing public URLs, listings and article bodies survive", async () => {
 });
 
 test("all HTML pages have consistent, accessible, production metadata", () => {
-    for (const { file, html, document } of documents) {
+    for (const { file, html, document } of publicDocuments) {
         assert.match(html, /^<!DOCTYPE html>/i, file);
         assert.equal(document.documentElement.lang, "en");
         assert.equal(document.querySelectorAll("main").length, 1);
@@ -61,9 +66,7 @@ test("all HTML pages have consistent, accessible, production metadata", () => {
         assert.equal(document.querySelector('meta[property="og:url"]').content, canonical);
         assert.equal(document.querySelector('meta[property="og:description"]').content, description);
         assert.equal(document.querySelector('meta[name="twitter:card"]').content, "summary");
-        const analytics = document.querySelector('script[data-website-id="b85f0592-1efc-4110-936d-54f3f07c1995"]');
-        assert.equal(analytics.src, "https://umami.cl01.krokbv.com/script.js");
-        assert.ok(analytics.hasAttribute("defer"));
+        assert.equal(document.querySelectorAll('script[src="/assets/js/analytics.js"]').length, 0);
         for (const image of document.querySelectorAll("img")) assert.ok(image.alt?.trim());
         for (const link of document.querySelectorAll('a[target="_blank"]')) {
             assert.match(link.rel, /noopener|noreferrer/);
@@ -101,7 +104,7 @@ test("compiled CSS contains the palettes, Nunjucks utilities and readability rul
     const css = await read("assets/css/tailwind.css");
     assert.ok(css.length > 5000);
     assert.ok(!css.includes('@import "tailwindcss"'));
-    for (const rule of ["--color-theme-300:#78e2a0", "--color-shark-950:#1f222a", ".bg-theme-300", ".bg-shark-950", ".text-theme-300", ".flex-wrap", ".site-container", "overflow-x:auto", ":focus-visible", "@font-face"]) {
+    for (const rule of ["--color-theme-300:#78e2a0", "--color-shark-950:#1f222a", ".bg-shark-950", ".site-container", "overflow-x:auto", ":focus-visible", "@font-face"]) {
         assert.ok(css.includes(rule), rule);
     }
     assert.match(await read("assets/css/prism-theme.css"), /\.token\.keyword/);
@@ -122,10 +125,48 @@ test("RSS, sitemap and robots expose only canonical production URLs", async () =
         assert.ok(!Number.isNaN(Date.parse(item.querySelector("pubDate").textContent)));
         assert.equal(item.querySelector("guid").textContent, item.querySelector("link").textContent);
     }
-    assert.equal(sitemap.querySelectorAll("loc").length, htmlFiles.length);
-    for (const { document } of documents) {
+    assert.equal(sitemap.querySelectorAll("loc").length, publicDocuments.length);
+    for (const { document } of publicDocuments) {
         assert.ok(sitemapText.includes(document.querySelector('link[rel="canonical"]').href));
     }
     assert.match(await read("robots.txt"), /User-agent: \*\nAllow: \//);
     assert.ok((await read("robots.txt")).includes(site.url + "/sitemap.xml"));
+});
+
+
+test("legacy aliases redirect to canonical snippets and are not indexed", async () => {
+    const sitemap = await read("sitemap.xml");
+    for (const [legacy, target] of [["notes/index.html", "/snippets/"], ["notes/debian-auto-updates/index.html", "/snippets/linux/debian-auto-updates/"]]) {
+        const doc = parseHTML(await read(legacy)).document;
+        assert.equal(doc.querySelector('link[rel="canonical"]').href, site.url + target);
+        assert.equal(doc.querySelector('meta[name="robots"]').content, "noindex, follow");
+        assert.equal(doc.querySelector('meta[http-equiv="refresh"]').content, "0;url=" + target);
+    }
+    assert.ok(!sitemap.includes("/notes/"));
+});
+
+test("search index includes code, metadata, and only available categories", async () => {
+    const index = JSON.parse(await read("snippet-search.json"));
+    assert.equal(index.length, 2);
+    assert.deepEqual([...new Set(index.map(item => item.category))].sort(), ["Certificates", "Linux"]);
+    assert.ok(index.some(item => item.text.includes("pfx") && item.text.includes("openssl pkcs12")));
+    assert.ok(index.some(item => item.text.includes("unattended-upgrades") && item.text.includes("apt-daily.timer")));
+});
+
+test("article dates and schema preserve publication and meaningful updates", async () => {
+    const cases = [
+        ["posts/power-automate-powershell/index.html", "2023-10-03", null],
+        ["snippets/linux/debian-auto-updates/index.html", "2024-08-16", "2026-10-26"],
+        ["snippets/certificates/pfx-to-crt-key/index.html", "2026-10-26", null],
+    ];
+    for (const [file, published, modified] of cases) {
+        const doc = parseHTML(await read(file)).document;
+        const schema = JSON.parse(doc.querySelector('script[type="application/ld+json"]').textContent);
+        assert.equal(schema.datePublished.slice(0, 10), published);
+        assert.equal(schema.dateModified?.slice(0, 10) ?? null, modified);
+        assert.ok(doc.querySelector("article header time").getAttribute("datetime").startsWith(published));
+        assert.ok(!doc.querySelector("article header").textContent.includes("Verified"));
+    }
+    const entries = [...parseHTML(await read("snippets/index.html")).document.querySelectorAll(".entry h2 a")];
+    assert.ok(entries[0].href.includes("pfx-to-crt-key"));
 });

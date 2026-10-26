@@ -6,6 +6,7 @@ export default [
     js.configs.recommended,
     {
         files: ["**/*.{js,cjs,mjs}"],
+        ignores: ["src/assets/js/**"],
         languageOptions: { globals: globals.node },
     },
     {

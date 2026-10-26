@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://openpanel.dev; connect-src 'self' https://analytics.krokbv.com; img-src 'self' data:; style-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
   {% set pageTitle = title + " | " + site.name %}
   {% set pageDescription = description or site.description %}
   {% set canonical = page.url | absoluteUrl(site.url) %}
@@ -33,11 +34,11 @@
   <script defer src="/assets/js/site.js"></script>
   {% if analytics.production %}<script defer src="/assets/js/analytics.js"></script>{% endif %}
 </head>
-<body class="bg-shark-950 pt-8">
+<body class="bg-shark-950">
   <div class="site-container">
     <a class="skip-link" href="#main">Skip to content</a>
     {% include "partials/_header.njk" %}
-    <main id="main" class="min-h-screen py-12" tabindex="-1">
+    <main id="main" tabindex="-1">
       {{ content | safe }}
     </main>
     <footer class="site-footer"><span>Built, broken, documented.</span><div><a href="https://github.com/LickABrick">GitHub</a><a href="/feed.xml">RSS</a></div></footer>

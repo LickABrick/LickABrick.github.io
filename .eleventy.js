@@ -11,7 +11,11 @@ module.exports = function (eleventyConfig) {
     eleventyConfig.addWatchTarget(".cache/tailwind.css");
     eleventyConfig.addPassthroughCopy("src/assets/css/prism-theme.css");
     eleventyConfig.addPassthroughCopy("src/assets/images");
-    eleventyConfig.addPassthroughCopy("src/assets/js");
+    eleventyConfig.addPassthroughCopy("src/assets/js/site.js");
+    eleventyConfig.addPassthroughCopy("src/assets/js/snippets.js");
+    if (process.env.BLOG_PRODUCTION === "true") {
+        eleventyConfig.addPassthroughCopy("src/assets/js/analytics.js");
+    }
     eleventyConfig.addPassthroughCopy("src/assets/favicon");
     eleventyConfig.addPassthroughCopy("src/assets/fonts/FiraCode-Regular.ttf");
     eleventyConfig.addPlugin(syntaxHighlight, { alwaysWrapLineHighlights: true });
