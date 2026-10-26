@@ -13,7 +13,7 @@ module.exports = function (eleventyConfig) {
     eleventyConfig.addPassthroughCopy("src/assets/css/prism-theme.css");
     eleventyConfig.addPassthroughCopy("src/assets/images");
     eleventyConfig.addPassthroughCopy("src/assets/js/site.js");
-    eleventyConfig.addPassthroughCopy("src/assets/js/snippets.js");
+    eleventyConfig.addPassthroughCopy("src/assets/js/content-search.js");
     if (process.env.BLOG_PRODUCTION === "true") {
         eleventyConfig.addPassthroughCopy("src/assets/js/analytics.js");
     }
@@ -24,7 +24,7 @@ module.exports = function (eleventyConfig) {
     eleventyConfig.addCollection("publicTags", api => tagCatalog(api.getAll().filter(item =>
         (item.data.tags || []).some(tag => ["post", "snippet"].includes(tag)))));
     eleventyConfig.addFilter("contentTags", publicTags);
-    eleventyConfig.addFilter("snippetTags", items => tagCatalog(items));
+    eleventyConfig.addFilter("archiveTags", items => tagCatalog(items));
     eleventyConfig.addFilter("searchIndex", items => items.map(item => ({
         url: item.url, tags: publicTags(item.data.tags).map(tag => tag.slug),
         text: [item.data.title, item.data.description, item.data.platform,

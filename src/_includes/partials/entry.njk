@@ -1,5 +1,5 @@
 {% macro render(entry, type="post", variant="full", heading=2) %}
-<section class="entry{% if variant == 'compact' %} entry-compact{% endif %}"{% if type == 'snippet' and variant == 'full' %} data-snippet-url="{{ entry.url }}"{% endif %}>
+<section class="entry{% if variant == 'compact' %} entry-compact{% endif %}"{% if variant == 'full' %} data-content-url="{{ entry.url }}"{% endif %}>
   {% if type == 'post' %}
     {% set published = entry.date %}{% set modified = entry.data.last_modified %}{% set verified = false %}{% set compact = false %}
     {% include "partials/dates.njk" %}
