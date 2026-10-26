@@ -21,6 +21,8 @@ module.exports = function (eleventyConfig) {
     eleventyConfig.addPassthroughCopy("src/assets/fonts/FiraCode-Regular.ttf");
     eleventyConfig.addPlugin(syntaxHighlight, { alwaysWrapLineHighlights: true });
     eleventyConfig.amendLibrary("md", require("./lib/code-blocks.cjs"));
+    eleventyConfig.addCollection("publicTags", api => tagCatalog(api.getAll().filter(item =>
+        (item.data.tags || []).some(tag => ["post", "snippet"].includes(tag)))));
     eleventyConfig.addFilter("contentTags", publicTags);
     eleventyConfig.addFilter("snippetTags", items => tagCatalog(items));
     eleventyConfig.addFilter("searchIndex", items => items.map(item => ({
