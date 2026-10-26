@@ -12,7 +12,7 @@ permalink: /snippets/certificates/pfx-to-crt-key/
 
 Use a private directory and unused output filenames. You need the PFX import password; let OpenSSL prompt rather than passing it on the command line.
 
-```bash
+```bash numbers=off
 openssl version
 # Restrict new files before extracting keys (Unix-like shells).
 umask 077
@@ -22,17 +22,17 @@ On Windows, restrict the directory's NTFS permissions instead. Keep PFX archives
 
 ## Extract certificate
 
-```bash
+```bash numbers=off
 openssl pkcs12 -in input.pfx -clcerts -nokeys -out certificate.crt
 ```
 
-Enter the PFX import password. Output is a PEM certificate. `-clcerts` excludes CA certificates; for archives with multiple identities, check that you selected the intended certificate/key pair.
+Enter the PFX import password. Output is PEM; `-clcerts` excludes CA certificates. For archives with multiple identities, check the intended certificate/key pair.
 
 ## Extract private key
 
 For a service that requires an **unencrypted** key:
 
-```bash
+```bash numbers=off
 openssl pkcs12 -in input.pfx -nocerts -noenc -out private.key
 chmod 600 private.key
 ```
@@ -41,7 +41,7 @@ Anyone with this file can use the private key. OpenSSL 3 uses `-noenc`; OpenSSL 
 
 If the service supports an encrypted key, omit `-noenc` and choose an output PEM passphrase when prompted:
 
-```bash
+```bash numbers=off
 openssl pkcs12 -in input.pfx -nocerts -out private-encrypted.key
 ```
 
@@ -49,7 +49,7 @@ Only add `-legacy` to extraction commands if an older PFX uses unsupported algor
 
 ## Optional CA chain
 
-```bash
+```bash numbers=off
 openssl pkcs12 -in input.pfx -cacerts -nokeys -out ca-chain.crt
 ```
 
@@ -57,7 +57,7 @@ Check the service's required chain order and whether to omit a root certificate;
 
 ## Verify
 
-```bash
+```bash numbers=off
 openssl x509 -in certificate.crt -noout -subject -issuer -dates -fingerprint -sha256
 openssl pkey -in private.key -check -noout
 # Public-key hashes must match; supports RSA and EC.

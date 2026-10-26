@@ -11,7 +11,7 @@ permalink: /snippets/linux/debian-auto-updates/
 
 ## Install packages
 
-```bash
+```bash numbers=off
 sudo apt update
 sudo apt install unattended-upgrades
 # Optional changelog notices; configure delivery for unattended use.
@@ -22,7 +22,7 @@ sudo apt install apt-listchanges
 
 Keep the packaged `50unattended-upgrades` file. Create a local override:
 
-```bash
+```bash numbers=off
 sudoedit /etc/apt/apt.conf.d/52unattended-upgrades-local
 ```
 
@@ -40,7 +40,7 @@ Unattended-Upgrade::Automatic-Reboot "false";
 Unattended-Upgrade::Automatic-Reboot-WithUsers "false";
 ```
 
-APT reads fragments in filename order; lists accumulate unless cleared. `${distro_codename}` selects bookworm on Debian 12 or trixie on Debian 13, regardless of `.list` or deb822 `.sources` format. The security repository must already be configured.
+APT reads fragments in filename order; lists accumulate unless cleared. `${distro_codename}` selects bookworm (12) or trixie (13). Configure the security repository first; `.list` and deb822 `.sources` both work.
 
 To also allow ordinary updates for the same release, add inside `Origins-Pattern`:
 
@@ -53,7 +53,7 @@ Leave third-party repositories, backports and proposed updates excluded unless e
 
 ## Enable updates
 
-```bash
+```bash numbers=off
 sudo dpkg-reconfigure -plow unattended-upgrades
 ```
 
@@ -64,7 +64,7 @@ APT::Periodic::Update-Package-Lists "1";
 APT::Periodic::Unattended-Upgrade "1";
 ```
 
-```bash
+```bash numbers=off
 sudo systemctl enable --now apt-daily.timer apt-daily-upgrade.timer
 systemctl list-timers --all apt-daily.timer apt-daily-upgrade.timer
 ```
@@ -85,7 +85,7 @@ This requires `/var/run/reboot-required` after an upgrade and avoids rebooting w
 
 ## Test
 
-```bash
+```bash numbers=off
 sudo unattended-upgrade --dry-run --debug
 ```
 
@@ -93,7 +93,7 @@ Check allowed origins and eligible packages. A dry run does not install updates.
 
 ## Check activity / troubleshoot
 
-```bash
+```bash numbers=off
 apt-cache policy
 apt-config dump | grep -E 'APT::Periodic|Unattended-Upgrade'
 apt-mark showhold
