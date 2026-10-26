@@ -138,12 +138,14 @@ article > header h1 { font-size: clamp(1.7rem, 3vw, 2.3rem); }
   main { padding-block: 2.5rem; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-.search-controls { display: flex; flex-wrap: wrap; align-items: end; gap: 1rem; margin-bottom: 1.5rem; }
-.search-controls > div:first-child { flex: 1 1 16rem; }
+.search-controls { --filter-control-height: 44px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 14rem) auto; align-items: end; gap: 1rem; margin-bottom: 1.5rem; max-width: 52rem; }
 .search-controls label { display: block; font-family: var(--font-mono); font-size: .8rem; margin-bottom: .4rem; }
-.search-controls input, .search-controls select, .search-controls button { width: 100%; border: 1px solid var(--color-shark-500); background: var(--color-shark-950); color: var(--color-neutral-50); padding: .6rem .75rem; }
-.search-controls button { width: auto; color: var(--color-theme-200); }
-.search-controls button:hover { border-color: var(--color-theme-300); }
+.search-controls input, .search-controls select, .search-controls button { box-sizing: border-box; height: var(--filter-control-height); width: 100%; border: 1px solid var(--color-shark-500); border-radius: 0; background: var(--color-shark-950); color: var(--color-neutral-50); padding: 0 .75rem; font-size: 1rem; line-height: 1.25; }
+.search-controls button { width: auto; justify-self: start; color: var(--color-theme-200); }
+.search-controls :is(input, select, button):hover { border-color: var(--color-theme-300); }
+@media (max-width: 640px) {
+  .search-controls { grid-template-columns: minmax(0, 1fr); }
+}
 
 .index-section { max-width: 52rem; margin-top: 2.5rem; }
 .section-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .5rem 1rem; margin-bottom: .75rem; }
