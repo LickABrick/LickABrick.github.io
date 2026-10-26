@@ -1,0 +1,6 @@
+---
+permalink: /snippet-search.json
+layout: false
+eleventyExcludeFromCollections: true
+---
+{{ collections.snippet | searchIndex | jsonSafe | safe }}

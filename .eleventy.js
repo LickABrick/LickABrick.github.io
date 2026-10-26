@@ -15,6 +15,12 @@ module.exports = function (eleventyConfig) {
     eleventyConfig.addPassthroughCopy("src/assets/favicon");
     eleventyConfig.addPassthroughCopy("src/assets/fonts/FiraCode-Regular.ttf");
     eleventyConfig.addPlugin(syntaxHighlight, { alwaysWrapLineHighlights: true });
+    eleventyConfig.addFilter("categories", items => [...new Set(items.map(item => item.data.category))].sort());
+    eleventyConfig.addFilter("searchIndex", items => items.map(item => ({
+        url: item.url, category: item.data.category,
+        text: [item.data.title, item.data.description, item.data.category, item.data.platform,
+            ...(item.data.tags || []), item.templateContent.replace(/<[^>]*>/g, " ")].join(" ").toLowerCase(),
+    })));
     eleventyConfig.addFilter("absoluteUrl", (path, base) => new URL(path, base).href);
     eleventyConfig.addFilter("publishedISO", value => asDate(value).toISOString());
     eleventyConfig.addFilter("displayDate", value => asDate(value).toLocaleDateString("en-GB", {
