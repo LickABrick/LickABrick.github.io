@@ -6,6 +6,7 @@ layout: base
     {% if category %}<p class="eyebrow">{{ category }}{% if platform %} / {{ platform }}{% endif %}</p>{% endif %}
     <h1>{{ title }}</h1>
     <p>{{ description }}</p>
+    {% set published = page.date %}{% set modified = last_modified %}{% set verified = last_verified %}{% set compact = false %}
     {% include "partials/dates.njk" %}
   </header>
   {{ content | safe }}

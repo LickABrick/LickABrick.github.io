@@ -7,13 +7,13 @@ async function enableSearch() {
     try {
         const response = await fetch("/snippet-search.json");
         if (!response.ok) throw new Error("Search index unavailable");
-        const index = await response.json();
+        const index = new Map((await response.json()).map(item => [item.url, item]));
         const entries = [...document.querySelectorAll("[data-snippet-url]")];
         function update() {
             const terms = query.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
             let count = 0;
             for (const entry of entries) {
-                const item = index.find(item => item.url === entry.dataset.snippetUrl);
+                const item = index.get(entry.dataset.snippetUrl);
                 const matches = item && (!category.value || item.category === category.value)
                     && terms.every(term => item.text.includes(term));
                 entry.hidden = !matches;

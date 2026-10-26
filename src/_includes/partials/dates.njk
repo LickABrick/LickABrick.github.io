@@ -1,5 +1,7 @@
+{% set updated = modified | isUpdated(published) %}
 <p class="meta">
-  Published <time datetime="{{ page.date | publishedISO }}">{{ page.date | displayDate }}</time>
-  {% if last_modified | isUpdated(page.date) %} · Updated <time datetime="{{ last_modified | publishedISO }}">{{ last_modified | displayDate }}</time>{% endif %}
-  {% if last_verified %} · Verified <time datetime="{{ last_verified | publishedISO }}">{{ last_verified | displayDate }}</time>{% endif %}
+  {% if compact and updated %}Updated <time datetime="{{ modified | publishedISO }}">{{ modified | displayDate }}</time>{% else %}
+  Published <time datetime="{{ published | publishedISO }}">{{ published | displayDate }}</time>
+  {% if updated %} · Updated <time datetime="{{ modified | publishedISO }}">{{ modified | displayDate }}</time>{% endif %}{% endif %}
+  {% if verified %} · Verified <time datetime="{{ verified | publishedISO }}">{{ verified | displayDate }}</time>{% endif %}
 </p>

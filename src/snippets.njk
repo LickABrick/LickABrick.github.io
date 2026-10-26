@@ -6,20 +6,15 @@ permalink: /snippets/
 ---
 <header class="page-intro"><p class="eyebrow">Reference library</p><h1>Snippets</h1><p>{{ description }}</p></header>
 <form id="snippet-search" class="search-controls" hidden role="search" aria-label="Find snippets">
-  <div><label for="query">Search commands and content</label><input id="query" type="search" autocomplete="off" placeholder="Try pfx or unattended-upgrades"></div>
-  <div><label for="category">Category</label><select id="category"><option value="">All categories</option>{% for category in collections.snippet | categories %}<option>{{ category }}</option>{% endfor %}</select></div>
+  <div><label for="query">Search commands and content</label><input id="query" aria-controls="snippet-results" type="search" autocomplete="off" placeholder="Try pfx or unattended-upgrades"></div>
+  <div><label for="category">Category</label><select id="category" aria-controls="snippet-results"><option value="">All categories</option>{% for category in collections.snippet | categories %}<option>{{ category }}</option>{% endfor %}</select></div>
   <button type="reset">Reset</button>
 </form>
 <p id="search-status" class="meta" role="status" hidden></p>
 <div class="entry-list" id="snippet-results">
-{% for snippet in collections.snippet | newestFirst %}
-  <section class="entry" data-snippet-url="{{ snippet.url }}">
-    <p class="eyebrow">{{ snippet.data.category }}{% if snippet.data.platform %} / {{ snippet.data.platform }}{% endif %}</p>
-    <h2><a href="{{ snippet.url }}">{{ snippet.data.title }}</a></h2>
-    <p>{{ snippet.data.description }}</p>
-    <p class="tags">{% for tag in snippet.data.tags %}{% if tag != 'snippet' %}<span>#{{ tag }}</span>{% endif %}{% endfor %}</p>
-    <p class="meta">{% if snippet.data.last_modified %}Updated <time datetime="{{ snippet.data.last_modified | publishedISO }}">{{ snippet.data.last_modified | displayDate }}</time>{% else %}Published <time datetime="{{ snippet.date | publishedISO }}">{{ snippet.date | displayDate }}</time>{% endif %}{% if snippet.data.last_verified %} · Verified <time datetime="{{ snippet.data.last_verified | publishedISO }}">{{ snippet.data.last_verified | displayDate }}</time>{% endif %}</p>
-  </section>
+{% set isSnippet = true %}
+{% for entry in collections.snippet | newestFirst %}
+  {% include "partials/entry.njk" %}
 {% endfor %}
 </div>
 <noscript><p>All snippets are listed above. Use your browser's Find command to search titles and descriptions.</p></noscript>
