@@ -63,7 +63,7 @@ pre[class*='language-'] {
 .token.prolog,
 .token.doctype,
 .token.cdata {
-	color: #446e69;
+	color: #85aaa4;
 }
 
 .token.punctuation {
@@ -84,7 +84,7 @@ pre[class*='language-'] {
 .token.attr-name,
 .token.builtin,
 .token.inserted {
-	color: #e60067;
+	color: #ff70ac;
 }
 
 .token.string,
@@ -118,20 +118,3 @@ pre[class*='language-'] {
 	color: #78e2a0;
 	opacity: 0.7;
 }
-
-/* pre {
-  counter-reset: lineNumber;
-}
-code .highlight-line:before {
-  -webkit-user-select: none;
-  border-right: 1px solid #404040;
-  color: #78e2a0;
-  content: counter(lineNumber);
-  counter-increment: lineNumber;
-  display: inline-block;
-  font-variant-numeric: tabular-nums;
-  margin-right: 1.2rem;
-  padding-right: 1.2rem;
-  text-align: right;
-  width: 1.2em;
-} */

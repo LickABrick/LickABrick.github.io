@@ -1,72 +1,118 @@
-/* src/assets/css/tailwind.css*/
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss" source(none);
+@source "../../**/*.{njk,md,html,svg}";
 
-body {
-  font-family: "Fira Code", sans-serif;
-  line-height: 1.5;
+@theme {
+  --color-theme-50: #f1fcf4;
+  --color-theme-100: #dff9e8;
+  --color-theme-200: #c0f2d2;
+  --color-theme-300: #78e2a0;
+  --color-theme-400: #56d285;
+  --color-theme-500: #2fb863;
+  --color-theme-600: #21984f;
+  --color-theme-700: #1d7840;
+  --color-theme-800: #1c5f36;
+  --color-theme-900: #194e2f;
+  --color-theme-950: #082b18;
+  --color-shark-50: #f6f7f9;
+  --color-shark-100: #eceef2;
+  --color-shark-200: #d5d9e2;
+  --color-shark-300: #b1b9c8;
+  --color-shark-400: #8693aa;
+  --color-shark-500: #677690;
+  --color-shark-600: #525e77;
+  --color-shark-700: #434c61;
+  --color-shark-800: #3a4252;
+  --color-shark-900: #343946;
+  --color-shark-950: #1f222a;
 }
 
-main {
-  @apply text-neutral-50;
+@layer base {
+  body {
+    font-family: "Fira Code", monospace;
+    line-height: 1.5;
+  }
+
+  main {
+    @apply text-neutral-50;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-semibold;
+  }
+
+  h2 {
+    @apply text-[1.4rem];
+    @apply mb-4;
+    @apply mt-6;
+  }
+
+  ul {
+    @apply list-disc;
+    @apply list-inside;
+    @apply marker:text-theme-300;
+  }
+
+  p {
+    @apply mb-5;
+  }
+
+  blockquote {
+    @apply p-4 my-4 border-s-8 border-theme-300 bg-shark-900 italic;
+  }
+
+  blockquote p {
+    @apply mb-0;
+  }
+
+  a {
+    @apply underline text-theme-200;
+  }
+
+  table {
+    @apply w-full text-left rtl:text-right;
+  }
+
+  thead {
+    @apply uppercase text-theme-300;
+  }
+
+  td,
+  th {
+    @apply px-4 py-2;
+    @apply border border-dashed border-theme-300;
+  }
+
+  img {
+    @apply rounded-md;
+  }
+
+  hr {
+    @apply border-dashed border-theme-300;
+  }
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  @apply font-semibold;
+@font-face {
+  font-family: "Fira Code";
+  src: url("/assets/fonts/FiraCode-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
 }
 
-h2 {
-  @apply text-[1.4rem];
-  @apply mb-4;
-  @apply mt-6;
-}
-
-ul {
-  @apply list-disc;
-  @apply list-inside;
-  @apply marker:text-theme-300;
-}
-
-p {
-  @apply mb-5;
-}
-
-blockquote {
-  @apply p-4 my-4 border-s-8 border-theme-300 bg-shark-900 italic;
-}
-
-blockquote p {
-  @apply mb-0;
-}
-
-a {
-  @apply underline text-theme-200;
-}
-
-table {
-  @apply w-full text-left rtl:text-right;
-}
-
-thead {
-  @apply uppercase text-theme-300;
-}
-
-td,
-th {
-  @apply px-4 py-2;
-  @apply border border-dashed border-theme-300;
-}
-
-img {
-  @apply rounded-md;
-}
-
-hr {
-  @apply border-dashed border-theme-300;
-}
+body { color: var(--color-neutral-50); line-height: 1.7; }
+.site-container { width: min(100% - 2rem, 72rem); margin-inline: auto; }
+article { max-width: 80ch; margin-inline: auto; overflow-wrap: anywhere; }
+article > header { margin-bottom: 2rem; }
+article h1 { line-height: 1.3; }
+pre { max-width: 100%; overflow-x: auto; overflow-wrap: normal; }
+img { max-width: 100%; height: auto; }
+table { display: block; max-width: 100%; overflow-x: auto; }
+:focus-visible { outline: 3px solid var(--color-theme-300); outline-offset: 4px; }
+.skip-link { position: absolute; top: -10rem; padding: .5rem; background: var(--color-shark-950); z-index: 10; }
+.skip-link:focus { top: .5rem; }
+nav a[aria-current="page"] { text-decoration: underline; text-underline-offset: .2em; }

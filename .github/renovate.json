@@ -1,0 +1,59 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:best-practices",
+    ":automergeMinor",
+    ":enableVulnerabilityAlerts",
+    ":label(dependencies)",
+    ":rebaseStalePrs",
+    ":separateMajorReleases"
+  ],
+  "baseBranchPatterns": ["main"],
+  "timezone": "Europe/Amsterdam",
+  "enabledManagers": ["npm", "github-actions", "nvm"],
+  "ignoreUnstable": true,
+  "schedule": ["* 6 * * *"],
+  "minimumReleaseAge": "7 days",
+  "internalChecksFilter": "strict",
+  "prConcurrentLimit": 15,
+  "prHourlyLimit": 2,
+  "automergeType": "pr",
+  "automergeStrategy": "squash",
+  "platformAutomerge": false,
+  "ignoreTests": false,
+  "rangeStrategy": "bump",
+  "commitBodyTable": true,
+  "osvVulnerabilityAlerts": true,
+  "dependencyDashboardOSVVulnerabilitySummary": "all",
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["* 6 * * *"],
+    "recreateWhen": "never"
+  },
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "schedule": ["at any time"],
+    "minimumReleaseAge": "0 days",
+    "automerge": false,
+    "dependencyDashboardApproval": false
+  },
+  "packageRules": [
+    {
+      "description": "Keep the Tailwind CLI and compiler aligned",
+      "matchPackageNames": ["tailwindcss", "@tailwindcss/cli"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "Tailwind CSS"
+    },
+    {
+      "description": "Major upgrades require dashboard approval and manual review",
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "dependencyDashboardApproval": true
+    },
+    {
+      "description": "Pre-1.0 packages may break on minor releases",
+      "matchCurrentVersion": "/^0\\./",
+      "automerge": false
+    }
+  ]
+}

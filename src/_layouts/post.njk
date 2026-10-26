@@ -1,13 +1,12 @@
 ---
 layout: base
 ---
-
-<div class="flex flex-col">
-    <a class="text-2xl font-semibold no-underline text-theme-300" href="{{ url }}">{{ title }}</a>
-    <p>{{description}}</p>
-    <hr>
-</div>
-
-<main class="min-h-screen py-6">
-    {{content | safe}}
-</main>
+<article>
+  <header>
+    <h1 class="text-2xl font-semibold text-theme-300">{{ title }}</h1>
+    <p>{{ description }}</p>
+    {% if publish_date %}<time class="text-theme-300" datetime="{{ publish_date | publishedISO }}">{{ publish_date }}</time>{% endif %}
+    <hr class="mt-4">
+  </header>
+  {{ content | safe }}
+</article>

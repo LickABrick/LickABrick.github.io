@@ -1,28 +1,34 @@
 {
   "name": "lickabrick.github.io",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "npm-run-all -p dev:*",
-    "build": "run-s build:*",
-    "dev:11ty": "eleventy --serve --port 8888",
-    "dev:css": "tailwindcss -i src/assets/css/tailwind.css -o _site/assets/css/tailwind.css --watch --postcss",
-    "build:11ty": "eleventy",
-    "build:css": "tailwindcss -i src/assets/css/tailwind.css -o _site/assets/css/tailwind.css --postcss"
-  },
-  "keywords": [],
-  "author": "",
+  "private": true,
+  "description": "LickABrick's personal technical blog and notes",
   "license": "ISC",
-  "devDependencies": {
-    "@11ty/eleventy": "^2.0.1",
-    "autoprefixer": "^10.4.20",
-    "npm-run-all": "^4.1.5",
-    "postcss": "^8.4.41",
-    "tailwindcss": "^3.4.10"
+  "engines": {
+    "node": ">=24.15.0 <25"
   },
-  "dependencies": {
-    "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.0",
-    "dotenv": "^16.4.5"
+  "scripts": {
+    "start": "npm run build:css && run-p dev:*",
+    "dev:11ty": "eleventy --serve --port 8888",
+    "dev:css": "tailwindcss -i src/assets/css/tailwind.css -o .cache/tailwind.css --watch=always",
+    "build": "npm run clean && npm run build:css && npm run build:11ty",
+    "clean": "node --input-type=module -e \"import { rmSync } from 'node:fs'; rmSync('_site', { recursive: true, force: true });\"",
+    "build:css": "tailwindcss -i src/assets/css/tailwind.css -o .cache/tailwind.css --minify",
+    "build:11ty": "eleventy",
+    "lint": "eslint . --max-warnings 0",
+    "lint:fix": "npm run lint -- --fix",
+    "test": "npm run build && node --test",
+    "test:site": "node --test"
+  },
+  "devDependencies": {
+    "@11ty/eleventy": "3.1.7",
+    "@11ty/eleventy-plugin-syntaxhighlight": "5.0.2",
+    "@eslint/js": "10.0.1",
+    "@tailwindcss/cli": "4.3.3",
+    "eslint": "10.13.0",
+    "globals": "17.13.0",
+    "linkedom": "0.18.14",
+    "npm-run-all2": "9.0.4",
+    "tailwindcss": "4.3.3"
   }
 }

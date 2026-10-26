@@ -1,28 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="{{ site.language }}">
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="apple-touch-icon" sizes="180x180" href="{{ '/assets/favicon/apple-touch-icon.png' | url }}">
-  <link rel="icon" type="image/png" sizes="32x32" href="{{ '/assets/favicon/favicon-32x32.png' | url }}">
-  <link rel="icon" type="image/png" sizes="16x16" href="{{ '/assets/favicon/favicon-16x16.png' | url }}">
-  <link rel="manifest" href="{{ '/assets/favicon/site.webmanifest' | url }}">
-  <link rel="stylesheet" href="{{ '/assets/css/tailwind.css' | url }}">
-  <link rel="stylesheet" href="{{ '/assets/css/prism-theme.css' | url }}">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% set pageTitle = title + " | " + site.name %}
+  {% set pageDescription = description or site.description %}
+  {% set canonical = page.url | absoluteUrl(site.url) %}
+  <title>{{ pageTitle }}</title>
+  <meta name="description" content="{{ pageDescription }}">
+  <link rel="canonical" href="{{ canonical }}">
+  <meta property="og:title" content="{{ pageTitle }}">
+  <meta property="og:description" content="{{ pageDescription }}">
+  <meta property="og:url" content="{{ canonical }}">
+  <meta property="og:site_name" content="{{ site.name }}">
+  <meta property="og:type" content="{% if publish_date %}article{% else %}website{% endif %}">
+  {% if publish_date %}<meta property="article:published_time" content="{{ publish_date | publishedISO }}">{% endif %}
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="{{ pageTitle }}">
+  <meta name="twitter:description" content="{{ pageDescription }}">
+  <link rel="alternate" type="application/rss+xml" title="{{ site.name }} posts" href="/feed.xml">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png">
+  <link rel="icon" href="/assets/favicon/favicon.ico">
+  <link rel="manifest" href="/assets/favicon/site.webmanifest">
+  <link rel="stylesheet" href="/assets/css/tailwind.css">
+  <link rel="stylesheet" href="/assets/css/prism-theme.css">
   <script defer src="https://umami.cl01.krokbv.com/script.js" data-website-id="b85f0592-1efc-4110-936d-54f3f07c1995"></script>
-  <title>{{title}}</title>
 </head>
-
-<body class="px-16 pt-8 lg:px-96 bg-shark-950">
-  {% include "partials/_header.njk" %}
-  <main class="min-h-screen py-12">
-    {{content | safe}}
-  </main>
+<body class="bg-shark-950 pt-8">
+  <div class="site-container">
+    <a class="skip-link" href="#main">Skip to content</a>
+    {% include "partials/_header.njk" %}
+    <main id="main" class="min-h-screen py-12" tabindex="-1">
+      {{ content | safe }}
+    </main>
+  </div>
 </body>
-
 </html>

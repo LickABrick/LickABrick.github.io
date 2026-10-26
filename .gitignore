@@ -1,4 +1,8 @@
-/node_modules
-/_site
+/node_modules/
+/_site/
+/.cache/
+/coverage/
 .env
+.env.*
+!.env.example
 .DS_Store
