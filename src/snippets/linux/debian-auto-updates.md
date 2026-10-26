@@ -2,7 +2,10 @@
 title: Enabling automatic (security) updates on Debian (12)
 description: Steps to enable automatic security updates on Debian systems.
 layout: post
-tags: note
+tags: [snippet, linux, debian]
+category: Linux
+platform: Debian
+permalink: /snippets/linux/debian-auto-updates/
 publish_date: 16-08-2024
 ---
 

@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Moved to {{ title }}</title>
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="{{ target | absoluteUrl(site.url) }}">
+  <meta http-equiv="refresh" content="0;url={{ target }}">
+</head>
+<body><main><h1>This page has moved</h1><p><a href="{{ target }}">Continue to {{ title }}</a>.</p></main></body>
+</html>
