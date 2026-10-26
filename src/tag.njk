@@ -10,13 +10,14 @@ eleventyComputed:
   title: "{{ tag.label }}"
   description: "Posts and practical snippets tagged {{ tag.label }}."
 ---
+{% from "partials/entry.njk" import render as renderEntry %}
 <header class="page-intro"><p class="eyebrow">Tag archive</p><h1>{{ tag.label }}</h1><p>{{ description }}</p></header>
 {% if tag.posts.length %}
 <section class="index-section" aria-labelledby="tag-posts">
   <div class="section-heading"><h2 id="tag-posts">Posts</h2><a href="/posts/">All Posts</a></div>
   <div class="entry-list">
-  {% set isSnippet = false %}{% set headingLevel = 3 %}{% set compactPreview = false %}
-  {% for entry in tag.posts %}{% include "partials/entry.njk" %}{% endfor %}
+  {% set entryType = "post" %}{% set entryHeading = 3 %}{% set entryVariant = "full" %}
+  {% for entry in tag.posts %}{{ renderEntry(entry, entryType, entryVariant, entryHeading) }}{% endfor %}
   </div>
 </section>
 {% endif %}
@@ -24,8 +25,8 @@ eleventyComputed:
 <section class="index-section" aria-labelledby="tag-snippets">
   <div class="section-heading"><h2 id="tag-snippets">Snippets</h2><a href="/snippets/?tag={{ tag.slug }}">Find matching Snippets</a></div>
   <div class="entry-list">
-  {% set isSnippet = true %}{% set headingLevel = 3 %}{% set compactPreview = true %}
-  {% for entry in tag.snippets %}{% include "partials/entry.njk" %}{% endfor %}
+  {% set entryType = "snippet" %}{% set entryHeading = 3 %}{% set entryVariant = "compact" %}
+  {% for entry in tag.snippets %}{{ renderEntry(entry, entryType, entryVariant, entryHeading) }}{% endfor %}
   </div>
 </section>
 {% endif %}

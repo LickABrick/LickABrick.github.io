@@ -4,6 +4,7 @@ title: Snippets
 description: Practical commands, scripts and procedures for everyday systems work.
 permalink: /snippets/
 ---
+{% from "partials/entry.njk" import render as renderEntry %}
 <header class="page-intro"><p class="eyebrow">Reference library</p><h1>Snippets</h1><p>{{ description }}</p></header>
 <form id="snippet-search" class="search-controls" hidden role="search" aria-label="Find snippets">
   <div><label for="query">Search commands and content</label><input id="query" aria-controls="snippet-results" type="search" autocomplete="off" placeholder="Try pfx or unattended-upgrades"></div>
@@ -13,9 +14,9 @@ permalink: /snippets/
 </form>
 <p id="search-status" class="meta" role="status" hidden></p>
 <div class="entry-list" id="snippet-results">
-{% set isSnippet = true %}{% set headingLevel = 2 %}{% set compactPreview = false %}
+{% set entryType = "snippet" %}{% set entryHeading = 2 %}{% set entryVariant = "full" %}
 {% for entry in collections.snippet | newestFirst %}
-  {% include "partials/entry.njk" %}
+  {{ renderEntry(entry, entryType, entryVariant, entryHeading) }}
 {% else %}<p>No snippets published yet.</p>{% endfor %}
 </div>
 <noscript><p>All snippets are listed above. Use your browser's Find command to search titles and descriptions.</p></noscript>
