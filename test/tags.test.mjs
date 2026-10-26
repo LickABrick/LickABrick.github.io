@@ -11,6 +11,7 @@ test("tags normalize case, whitespace, duplicates and safe slugs; collisions fai
     assert.deepEqual(tags.map(tag => tag.slug), ["powershell", "microsoft-365", "c", "cafe"]);
     assert.equal(tags[0].label, "PowerShell");
     assert.deepEqual(publicTags(null), []);
+    assert.equal(publicTags(["constructor"])[0].label, "constructor");
     assert.throws(() => publicTags(["C++", "C#"]), /collision/);
     assert.throws(() => publicTags(["!!!"]), /URL-safe/);
     for (const tag of publicTags(['<script>alert("x")</script>', "a/b?c=d"])) assert.match(tag.url, /^\/tags\/[a-z0-9-]+\/$/);

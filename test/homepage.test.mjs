@@ -67,6 +67,11 @@ test("optional metadata displays meaningful updates and tags consistently", () =
     const unchanged = parseHTML(env.renderString('{% from "partials/entry.njk" import render %}{{ render(entry) }}', { entry })).document;
     assert.equal(unchanged.querySelectorAll("time").length, 1);
     assert.ok(!unchanged.querySelector(".meta").textContent.includes("Updated"));
+    entry.data.tags = ['<img src=x onerror="alert(1)">', "linux", "debian"];
+    const compact = parseHTML(env.renderString('{% from "partials/entry.njk" import render %}{{ render(entry, "snippet", "compact", 3) }}', { entry })).document;
+    assert.equal(compact.querySelectorAll(".tags a").length, 2);
+    assert.equal(compact.querySelectorAll("img").length, 0);
+    assert.ok(compact.querySelector(".tags a").textContent.includes("<img"));
 });
 
 test("generated homepage/archive navigation and canonical URLs are distinct", async () => {
@@ -80,7 +85,9 @@ test("generated homepage/archive navigation and canonical URLs are distinct", as
     assert.equal(snippets.querySelector('nav a[aria-current="page"]').href, "/snippets/");
     assert.notEqual(home.querySelector('link[rel="canonical"]').href, archive.querySelector('link[rel="canonical"]').href);
     assert.equal(home.querySelectorAll(".entry-compact").length, Math.min(5, snippets.querySelectorAll(".entry").length));
-    const article = parseHTML(await readFile("_site/posts/power-automate-powershell/index.html", "utf8")).document;
-    assert.match(article.querySelector("article header .tags").textContent, /#powershell/);
-    assert.ok(!article.querySelector("article header").textContent.includes("Updated"));
+    for (const link of archive.querySelectorAll(".entry h2 a")) {
+        const article = parseHTML(await readFile(`_site${link.href}index.html`, "utf8")).document;
+        const expected = [...link.closest(".entry").querySelectorAll(".tags a")].map(tag => tag.href);
+        assert.deepEqual([...article.querySelectorAll("article header .tags a")].map(tag => tag.href), expected);
+    }
 });
