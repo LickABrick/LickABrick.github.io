@@ -1,9 +1,10 @@
 <section class="entry"{% if isSnippet %} data-snippet-url="{{ entry.url }}"{% endif %}>
   {% if isSnippet %}<p class="eyebrow">{{ entry.data.category }}{% if entry.data.platform %} / {{ entry.data.platform }}{% endif %}</p>{% else %}
-  <p class="meta"><time datetime="{{ entry.date | publishedISO }}">{{ entry.date | displayDate }}</time></p>{% endif %}
+  {% set published = entry.date %}{% set modified = entry.data.last_modified %}{% set verified = false %}{% set compact = false %}
+  {% include "partials/dates.njk" %}{% endif %}
   <h2><a href="{{ entry.url }}">{{ entry.data.title }}</a></h2>
   <p>{{ entry.data.description }}</p>
-  {% if entry.data.tags %}<p class="tags">{% for tag in entry.data.tags %}{% if tag != 'post' and tag != 'snippet' %}<span>#{{ tag }}</span>{% endif %}{% endfor %}</p>{% endif %}
+  {% set tags = entry.data.tags %}{% include "partials/tags.njk" %}
   {% if isSnippet %}
     {% set published = entry.date %}{% set modified = entry.data.last_modified %}{% set verified = entry.data.last_verified %}{% set compact = true %}
     {% include "partials/dates.njk" %}

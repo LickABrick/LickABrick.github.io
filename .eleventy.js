@@ -20,6 +20,7 @@ module.exports = function (eleventyConfig) {
     eleventyConfig.addPassthroughCopy("src/assets/fonts/FiraCode-Regular.ttf");
     eleventyConfig.addPlugin(syntaxHighlight, { alwaysWrapLineHighlights: true });
     eleventyConfig.amendLibrary("md", require("./lib/code-blocks.cjs"));
+    eleventyConfig.addFilter("contentTags", tags => (Array.isArray(tags) ? tags : tags ? [tags] : []).filter(tag => !["post", "snippet"].includes(tag)));
     eleventyConfig.addFilter("categories", items => [...new Set(items.map(item => item.data.category))].sort());
     eleventyConfig.addFilter("searchIndex", items => items.map(item => ({
         url: item.url, category: item.data.category,
