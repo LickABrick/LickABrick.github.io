@@ -4,7 +4,7 @@
   {% include "partials/dates.njk" %}{% endif %}
   {% if headingLevel == 3 %}<h3><a href="{{ entry.url }}">{{ entry.data.title }}</a></h3>{% else %}<h2><a href="{{ entry.url }}">{{ entry.data.title }}</a></h2>{% endif %}
   {% if not compactPreview %}<p>{{ entry.data.description }}</p>{% endif %}
-  {% if not compactPreview %}{% set tags = entry.data.tags %}{% include "partials/tags.njk" %}{% endif %}
+  {% set tags = entry.data.tags %}{% set tagLimit = 0 %}{% if compactPreview %}{% set tagLimit = 2 %}{% endif %}{% include "partials/tags.njk" %}
   {% if isSnippet and not compactPreview %}
     {% set published = entry.date %}{% set modified = entry.data.last_modified %}{% set verified = entry.data.last_verified %}{% set compact = true %}
     {% include "partials/dates.njk" %}

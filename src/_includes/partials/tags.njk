@@ -1,2 +1,3 @@
 {% set visibleTags = tags | contentTags %}
+{% if tagLimit %}{% set visibleTags = visibleTags | head(tagLimit) %}{% endif %}
 {% if visibleTags.length %}<p class="tags">{% for tag in visibleTags %}<a href="{{ tag.url }}">#{{ tag.label }}</a>{% endfor %}</p>{% endif %}

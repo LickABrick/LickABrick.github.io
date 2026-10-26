@@ -151,4 +151,9 @@ article > header h1 { font-size: clamp(1.7rem, 3vw, 2.3rem); }
 .section-heading > a { font: .8rem var(--font-mono); }
 .entry-compact { padding-block: 1rem; }
 .entry-compact h3 { font-size: 1.1rem; margin-bottom: 0; }
-.entry-compact .eyebrow { font-size: .75rem; margin-bottom: .3rem; }
+.entry-compact .tags { margin-top: .6rem; margin-bottom: 0; }
+.search-controls > div { min-width: 0; }
+.search-controls input, .search-controls select { min-width: 0; }
+@media (max-width: 540px) {
+  .section-heading { align-items: start; flex-direction: column; }
+}
