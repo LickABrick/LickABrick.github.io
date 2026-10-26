@@ -6,7 +6,7 @@ tags: [snippet, linux, debian]
 category: Linux
 platform: Debian
 permalink: /snippets/linux/debian-auto-updates/
-publish_date: 16-08-2024
+date: 2024-08-16
 ---
 
 Install required packages

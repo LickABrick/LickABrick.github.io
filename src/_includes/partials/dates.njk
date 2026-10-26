@@ -1,0 +1,5 @@
+<p class="meta">
+  Published <time datetime="{{ page.date | publishedISO }}">{{ page.date | displayDate }}</time>
+  {% if last_modified | isUpdated(page.date) %} · Updated <time datetime="{{ last_modified | publishedISO }}">{{ last_modified | displayDate }}</time>{% endif %}
+  {% if last_verified %} · Verified <time datetime="{{ last_verified | publishedISO }}">{{ last_verified | displayDate }}</time>{% endif %}
+</p>

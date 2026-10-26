@@ -8,7 +8,7 @@ tags: page
 <div class="entry-list">
 {% for post in collections.post | newestFirst %}
   <section class="entry">
-    <p class="meta"><time datetime="{{ post.data.publish_date | publishedISO }}">{{ post.data.publish_date }}</time></p>
+    <p class="meta"><time datetime="{{ post.date | publishedISO }}">{{ post.date | displayDate }}</time></p>
     <h2><a href="{{ post.url }}">{{ post.data.title }}</a></h2>
     <p>{{ post.data.description }}</p>
     {% if post.data.tags %}<p class="tags">{% for tag in post.data.tags %}{% if tag != 'post' %}<span>#{{ tag }}</span>{% endif %}{% endfor %}</p>{% endif %}

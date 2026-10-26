@@ -17,7 +17,7 @@ eleventyExcludeFromCollections: true
       <link>{{ post.url | absoluteUrl(site.url) }}</link>
       <guid isPermaLink="true">{{ post.url | absoluteUrl(site.url) }}</guid>
       <description>{{ post.data.description | escape }}</description>
-      <pubDate>{{ post.data.publish_date | rssDate }}</pubDate>
+      <pubDate>{{ post.date | rssDate }}</pubDate>
     </item>
     {% endfor %}
   </channel>
